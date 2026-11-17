@@ -298,6 +298,14 @@ body.ro-bg #ro-title,body.ro-bg #v-roqueue>.btnrow p,body.pub-bg h2,body.pub-bg 
 .brand h1 .h1t{color:var(--ink,#eef3fb)}
 .brand h1 .pha{height:.73em;width:auto;vertical-align:baseline;margin:0 .03em 0 .01em;display:inline-block}
 .brand h1.tlogo{margin:0;line-height:0}.brand h1.tlogo img{height:clamp(34px,5.4vw,62px);width:auto;max-width:100%;display:block}
+.pie .lg .lgh{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;border-bottom:1px solid var(--line);padding-bottom:4px}.pie .lg .lgh i{background:none}.pie .lg .lgh b,.pie .lg .lgh em{color:var(--muted);font-weight:700}
+.pvt{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.pvt table{min-width:0;width:100%;font-size:.8rem}.pvt th{position:sticky;top:0;background:#0d2357;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;padding:8px 6px;z-index:1}.pvt td{padding:6px;text-align:center}.pvt td:first-child,.pvt th:first-child{text-align:left}
+.pvt tfoot td{position:sticky;bottom:0;background:#0d2357;border-top:1px solid var(--line)}
+.smix{display:flex;width:90px;height:9px;border-radius:99px;overflow:hidden;background:#11295a;margin:0 auto}.smix i{display:block;height:100%}
+.rodash{display:grid;gap:16px;grid-template-columns:minmax(300px,1fr) 2fr;align-items:stretch}@media (max-width:980px){.rodash{grid-template-columns:1fr}}
+.pvt .rlink{white-space:nowrap;text-align:left}.pvt{max-height:380px}
+.rodash .pie{flex-direction:column}
 </style>
 </head>
 <body>
@@ -364,7 +372,7 @@ body.ro-bg #ro-title,body.ro-bg #v-roqueue>.btnrow p,body.pub-bg h2,body.pub-bg 
   <figure class="robanner fb" role="img" aria-label="Regional office building"></figure>
   <div class="btnrow" style="justify-content:space-between;align-items:flex-end"><div><h2 id="ro-title">Regional Monitoring and Evaluation</h2><p class="small">Review projects, check evidences, and decide which project needs a closer look.</p></div><div class="field" style="min-width:240px"><label for="ro-reg">Your region</label><select id="ro-reg"></select></div></div>
   <div class="stats kpi" id="ro-kpis"></div>
-  <div class="grid2"><div class="card cen"><h3>Project status</h3><div id="ro-pie1"></div></div><div class="card cen"><h3>Projects by province / city</h3><div id="ro-pie2"></div></div></div>
+  <div class="rodash"><div class="card cen"><h3>Project status</h3><div id="ro-pie1"></div></div><div class="card"><h3>Projects by province / city and status</h3><div id="ro-pie2"></div></div></div>
   <div class="card" id="ro-list">
     <div class="btnrow" style="justify-content:space-between"><h3>Projects in your region</h3><span class="small" id="ro-count"></span></div>
     <div class="filters"><input id="qf-q" type="search" placeholder="Search code, title or LGU" aria-label="Search"><select id="qf-prov" aria-label="Province or city"></select><select id="qf-st" aria-label="Status"><option value="">All statuses</option><option>Completed</option><option>On-going</option><option>Not Yet Started</option><option value="other">Other</option></select><select id="qf-pr" aria-label="Priority"><option value="">All priorities</option><option value="h">High</option><option value="m">Medium</option><option value="l">Low</option></select><select id="qf-ev" aria-label="Evidence"><option value="">All evidence labels</option><option value="c">Consistent</option><option value="p">Partially Consistent</option><option value="i">Inconsistent</option><option value="u">Insufficient Evidence</option></select><select id="qf-dec" aria-label="Decision"><option value="">All decisions</option><option value="pending">Pending</option><option value="done">Decided</option></select><button class="btn ghost" type="button" id="qf-x">Clear filters</button></div>
@@ -946,7 +954,7 @@ body.ro-bg #ro-title,body.ro-bg #v-roqueue>.btnrow p,body.pub-bg h2,body.pub-bg 
   function pie(seg,lbl){var tot=seg.reduce(function(a,x){return a+x.v;},0)||1,r=46,c=2*Math.PI*r,off=0,svg='<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="'+r+'" fill="none" stroke="#11295a" stroke-width="20"/>';
     seg.forEach(function(x){if(!x.v)return;var L=c*x.v/tot;svg+='<circle cx="60" cy="60" r="'+r+'" fill="none" stroke="'+x.c+'" stroke-width="20" stroke-dasharray="'+L.toFixed(2)+' '+(c-L).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'" transform="rotate(-90 60 60)"/>';off+=L;});
     svg+='<text x="60" y="61" text-anchor="middle" fill="#eef3fb" font-family="Verdana" font-weight="700" font-size="16">'+peso(tot)+'</text><text x="60" y="76" text-anchor="middle" fill="#9db0d4" font-size="9">'+(lbl||"projects")+'</text></svg>';
-    return '<div class="pie">'+svg+'<div class="lg">'+seg.filter(function(x){return x.v;}).map(function(x){return '<span'+(x.k?' class="lk" data-k="'+esc(x.k)+'"':'')+'><i style="background:'+x.c+'"></i>'+esc(x.l)+'<b>'+peso(x.v)+'</b><em>'+Math.round(100*x.v/tot)+'%</em></span>';}).join("")+'</div></div>';}
+    return '<div class="pie">'+svg+'<div class="lg"><span class="lgh"><i></i>Status<b>Projects</b><em>Share</em></span>'+seg.filter(function(x){return x.v;}).map(function(x){return '<span'+(x.k?' class="lk" data-k="'+esc(x.k)+'"':'')+'><i style="background:'+x.c+'"></i>'+esc(x.l)+'<b>'+peso(x.v)+'</b><em>'+Math.round(100*x.v/tot)+'%</em></span>';}).join("")+'</div></div>';}
   function pager(el,n,page,per,go){var pages=Math.ceil(n/per);if(pages<=1){el.innerHTML="";return;}
     var b=[],add=function(pg,t,cur){b.push('<button type="button" data-pg="'+pg+'"'+(cur?' aria-current="page"':'')+'>'+t+'</button>');};
     if(page>1)add(page-1,"‹ Prev");var lo=Math.max(1,page-2),hi=Math.min(pages,page+2);if(lo>1){add(1,"1");if(lo>2)b.push('<span>…</span>');}
@@ -958,9 +966,11 @@ body.ro-bg #ro-title,body.ro-bg #v-roqueue>.btnrow p,body.pub-bg h2,body.pub-bg 
     $("ro-kpis").innerHTML='<button type="button" class="stat" data-k="all"><b>'+peso(ps.length)+'</b><span>Projects in the region</span><small>₱'+(cost/1e9).toFixed(2)+'B total project cost</small></button><button type="button" class="stat r" data-k="h"><b>'+peso(hi)+'</b><span>High AI Review Priority</span><small>for closer review</small></button><button type="button" class="stat g" data-k="dec"><b>'+peso(dec)+'</b><span>Decisions recorded</span><small>on review briefs</small></button><button type="button" class="stat" style="border-left-color:var(--cit)" data-k="tk"><b>'+open+'</b><span>Open citizen tickets</span><small>received or under validation</small></button>';
     var cnt={Completed:0,"On-going":0,"Not Yet Started":0,other:0};ps.forEach(function(p){cnt[stGroup(p)]++;});
     $("ro-pie1").innerHTML=pie([{l:"Completed",v:cnt.Completed,c:"#3FD18A",k:"Completed"},{l:"On-going",v:cnt["On-going"],c:"#F2C230",k:"On-going"},{l:"Not yet started",v:cnt["Not Yet Started"],c:"#7f93b8",k:"Not Yet Started"},{l:"Other",v:cnt.other,c:"#E86A5C",k:"other"}]);
-    var pv={};ps.forEach(function(p){var k=p.prov||"(not given)";pv[k]=(pv[k]||0)+1;});var ks=Object.keys(pv).sort(function(a,b){return pv[b]-pv[a];}),seg=ks.slice(0,8).map(function(k,i){return{l:k,v:pv[k],c:PAL[i],k:"prov:"+k};});
-    if(ks.length>8)seg.push({l:"Others ("+(ks.length-8)+")",v:ks.slice(8).reduce(function(a,k){return a+pv[k];},0),c:PAL[8]});
-    $("ro-pie2").innerHTML=pie(seg);
+    var pv={},pc={};ps.forEach(function(p){var k=p.prov||"(not given)";pv[k]=(pv[k]||0)+1;var c=pc[k]||(pc[k]={Completed:0,"On-going":0,"Not Yet Started":0,other:0});c[stGroup(p)]++;});var ks=Object.keys(pv).sort(function(a,b){return pv[b]-pv[a];});
+    var SC=[["Completed","#3FD18A"],["On-going","#F2C230"],["Not Yet Started","#7f93b8"],["other","#E86A5C"]];
+    $("ro-pie2").innerHTML='<div class="pvt"><table><thead><tr><th>Province / City</th><th>Completed</th><th>On-going</th><th>Not yet started</th><th>Other</th><th>Total</th><th>% of region</th><th>Status mix</th></tr></thead><tbody>'+
+      ks.map(function(k){var c=pc[k],n=pv[k];return '<tr><td><button type="button" class="rlink" data-pv="'+esc(k)+'">'+esc(k)+'</button></td>'+SC.map(function(x){return '<td>'+(c[x[0]]?'<button type="button" class="nlink" data-pv="'+esc(k)+'" data-st="'+x[0]+'" style="color:'+x[1]+'">'+peso(c[x[0]])+'</button>':'<span class="small">0</span>')+'</td>';}).join("")+'<td><b>'+peso(n)+'</b></td><td>'+(100*n/ps.length).toFixed(1)+'%</td><td><div class="smix">'+SC.map(function(x){return c[x[0]]?'<i style="width:'+(100*c[x[0]]/n)+'%;background:'+x[1]+'" title="'+(x[0]==="other"?"Other":x[0])+': '+c[x[0]]+'"></i>':'';}).join("")+'</div></td></tr>';}).join("")+
+      '</tbody><tfoot><tr><td><b>Total</b></td>'+SC.map(function(x){return '<td><b>'+peso(cnt[x[0]])+'</b></td>';}).join("")+'<td><b>'+peso(ps.length)+'</b></td><td>100%</td><td></td></tr></tfoot></table></div><p class="srcn">'+ks.length+' provinces / cities. Click a name or a number to filter the project list. "Other" = cancelled, terminated, not implemented or under procurement.</p>';
     $("qf-prov").innerHTML='<option value="">All provinces / cities</option>'+ks.slice().sort().map(function(k){return '<option'+(QF.prov===k?' selected':'')+'>'+esc(k)+'</option>';}).join("");
     ["q","st","pr","ev","dec"].forEach(function(k){$("qf-"+k).value=QF[k];});
     var q=QF.q.toLowerCase(),L=ps.filter(function(p){return (!QF.prov||(p.prov||"(not given)")===QF.prov)&&(!QF.st||stGroup(p)===QF.st)&&(!QF.pr||p.pr[0]===QF.pr)&&(!QF.ev||p.ev.k===QF.ev)&&(!QF.dec||(QF.dec==="done"?!!DEC[p.id]:!DEC[p.id]))&&(!q||(p.id+" "+p.title+" "+p.lgu+" "+p.prov).toLowerCase().indexOf(q)>-1);}).sort(rank);
@@ -972,7 +982,8 @@ body.ro-bg #ro-title,body.ro-bg #v-roqueue>.btnrow p,body.pub-bg h2,body.pub-bg 
   }
   function qfSet(k,v){QF={q:"",prov:"",st:"",pr:"",ev:"",dec:""};if(k)QF[k]=v;QP=1;drawQueue();$("ro-list").scrollIntoView({behavior:"smooth"});}
   $("ro-kpis").addEventListener("click",function(e){var b=e.target.closest("[data-k]");if(!b)return;var k=b.dataset.k;if(k==="tk"){location.hash="rofeedback";return;}if(k==="all")qfSet();else if(k==="h")qfSet("pr","h");else if(k==="dec")qfSet("dec","done");});
-  ["ro-pie1","ro-pie2"].forEach(function(id){$(id).addEventListener("click",function(e){var x=e.target.closest(".lk");if(!x)return;var k=x.dataset.k;if(k.indexOf("prov:")===0)qfSet("prov",k.slice(5));else qfSet("st",k);});});
+  $("ro-pie1").addEventListener("click",function(e){var x=e.target.closest(".lk");if(x)qfSet("st",x.dataset.k);});
+  $("ro-pie2").addEventListener("click",function(e){var x=e.target.closest("[data-pv]");if(!x)return;QF={q:"",prov:x.dataset.pv,st:x.dataset.st||"",pr:"",ev:"",dec:""};QP=1;drawQueue();$("ro-list").scrollIntoView({behavior:"smooth"});});
   ["q","prov","st","pr","ev","dec"].forEach(function(k){$("qf-"+k).addEventListener(k==="q"?"input":"change",function(){QF[k]=this.value;QP=1;drawQueue();});});
   $("qf-x").addEventListener("click",function(){qfSet();});
   $("ro-reg-tb").addEventListener("click",function(e){var tr=e.target.closest("tr[data-id]");if(!tr)return;fillPick(tr.dataset.id);location.hash="roreview";showStreams();});
