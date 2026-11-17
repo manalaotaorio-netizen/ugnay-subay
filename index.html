@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UGNAY-SUBAY</title>
+<style>
+/* Layout: dark take on a navy-red-gold civic palette. Navy header with a gold slash, a "View as" switch for three interfaces (Public, Regional Office, Central Office), one view at a time. */
+:root{
+  --bg:#06102a; --surface:#0b1c42; --raise:#11295a; --ink:#eef3fb; --muted:#9db0d4; --line:#1d3a78;
+  --navy:#0a2a6e; --gold:#f2c230; --red:#e0353f; --blue:#5aa2ff;
+  --sb:#5aa2ff; --tpm:#c59bff; --rp:#f2c230; --cit:#3fd6b8;
+  --ok:#3fd18a; --warn:#f2c230; --bad:#ff5a5f; --unk:#8396b8;
+  --display:Verdana,Geneva,"DejaVu Sans",sans-serif;
+  --body:Verdana,Geneva,"DejaVu Sans",sans-serif;
+  --mono:Consolas,"Courier New",ui-monospace,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+a{color:var(--blue)}
+h1,h2,h3{font-family:var(--display);line-height:1.1;text-wrap:balance;margin:0}
+h2{font-size:1.4rem;font-weight:700} h3{font-size:1rem;font-weight:700}
+p{margin:0} button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 16px}
+.small{font-size:.86rem;color:var(--muted)}
+
+/* header */
+.top{background:linear-gradient(180deg,#0d2257,#081943);border-bottom:1px solid var(--line)}
+.hrow{display:flex;gap:14px;align-items:center;padding:12px 0}
+.logo{width:clamp(54px,6.5vw,84px);height:clamp(54px,6.5vw,84px);flex:none}
+.dilg{width:clamp(78px,9.5vw,120px);height:auto;flex:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+.hero.co{position:relative;overflow:hidden;min-height:clamp(380px,62vh,620px);align-content:end;padding:clamp(20px,4vw,44px);background:linear-gradient(0deg,rgba(6,16,42,.94) 0%,rgba(6,16,42,.55) 32%,rgba(6,16,42,0) 60%),url(img/co.jpg) center 35%/cover no-repeat,#0b2257;border-color:#2a4c94}
+.hero.co h2{font-size:clamp(1.6rem,3.6vw,2.6rem)}
+.hero.co p{max-width:56ch}
+.robanner .rofb{display:none}
+.robanner.fb{position:relative;min-height:clamp(340px,52vh,520px);display:grid;align-content:end;padding:clamp(20px,4vw,44px);background:linear-gradient(0deg,rgba(6,16,42,.94) 0%,rgba(6,16,42,.5) 35%,rgba(6,16,42,0) 65%),url(img/ro-web.jpg) center 30%/cover no-repeat,#0b2257}
+.robanner.fb .rofb{display:grid;gap:8px}
+.robanner.fb h2{font-size:clamp(1.6rem,3.6vw,2.6rem)}
+.robanner.fb h2 span{color:var(--gold)}
+.robanner{margin:0;border-radius:18px;overflow:hidden;border:1px solid #2a4c94;background:#0b2257}
+.robanner img{display:block;width:100%;height:auto}
+.brand{flex:1;min-width:0}
+.brand h1{font-size:clamp(1.9rem,6vw,3.25rem);font-weight:700;letter-spacing:.05em;line-height:1.05}
+.brand h1 span{color:var(--gold)}
+.brand p{font-size:clamp(.8rem,1.6vw,1.05rem);color:var(--gold);letter-spacing:.08em;margin-top:4px}
+.viewas{display:grid;grid-template-columns:auto auto;gap:6px 8px;align-items:center}
+.viewas label{text-align:right}
+@media (min-width:641px){.brand h1{white-space:nowrap}}
+.viewas label{font-size:.8rem;color:var(--muted)}
+.viewas select{background:var(--raise);border:2px solid var(--gold);border-radius:10px;padding:7px 10px;font-weight:700}
+.demo{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:var(--gold);border:1px solid rgba(242,194,48,.5);background:rgba(242,194,48,.08);border-radius:6px;padding:4px 8px;white-space:nowrap}
+.navbar{background:var(--navy);position:sticky;top:0;z-index:20;box-shadow:0 2px 0 #071a45}
+.navbar .wrap{display:flex;align-items:stretch;justify-content:space-between}
+nav{display:flex;overflow-x:auto}
+nav a{flex:none;text-decoration:none;color:#dfe8fb;font-weight:700;padding:13px 16px;font-size:.95rem;border-bottom:3px solid transparent}
+nav a[aria-current="page"]{border-bottom-color:var(--gold);color:#fff}
+nav a:hover{background:rgba(255,255,255,.06)}
+.badge{background:var(--red);color:#fff;border-radius:999px;padding:1px 8px;font-size:.72rem;margin-left:4px}
+.slash{flex:none;width:120px;background:linear-gradient(90deg,transparent 0 22%,var(--gold) 22%);clip-path:polygon(22% 0,100% 0,100% 100%,0 100%)}
+@media (max-width:640px){.slash{display:none}.hrow{flex-wrap:wrap}}
+.crumb{border-bottom:1px solid var(--line);font-size:.84rem;color:var(--muted)}
+.crumb .wrap{padding:8px 16px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.crumb b{color:var(--ink)}
+
+main{padding:22px 0 56px}
+section.view{display:none} section.view.on{display:grid;gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:12px}
+.grid2{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.split{display:grid;gap:16px;grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);align-items:start}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+.hero{border-radius:18px;padding:26px;background:radial-gradient(120% 140% at 100% 0%,rgba(224,53,63,.35),transparent 55%),radial-gradient(120% 140% at 0% 100%,rgba(90,162,255,.28),transparent 55%),var(--surface);border:1px solid var(--line);display:grid;gap:8px}
+.hero h2{font-size:1.7rem;font-weight:700}
+.hero h2 span{color:var(--gold)}
+.field{display:grid;gap:5px}
+.field label{font-weight:700;font-size:.9rem}
+.field input,.field select,.field textarea{background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+.field textarea{min-height:90px;resize:vertical}
+.fgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.btn{cursor:pointer;text-decoration:none;font-weight:800;border-radius:10px;padding:10px 16px;border:1px solid var(--gold);background:var(--gold);color:#1d1600;display:inline-block;font-size:.93rem}
+.btn.ghost{background:transparent;color:var(--gold)}
+.btn.blue{background:var(--blue);border-color:var(--blue);color:#04152f}
+.btn.red{background:transparent;border-color:var(--bad);color:var(--bad)}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#03261a}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.hint{border:1px dashed var(--line);border-radius:12px;padding:12px;color:var(--muted);font-size:.92rem;background:rgba(17,41,90,.4)}
+.results{display:grid;gap:10px}
+.pcard{background:var(--raise);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:8px}
+.pcard .hd{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pcard b{font-family:var(--display)}
+.mono{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.prog{height:9px;background:#0a1c44;border-radius:999px;overflow:hidden}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--gold))}
+.meta{display:flex;gap:16px;flex-wrap:wrap;font-size:.86rem;color:var(--muted)}
+.meta b{color:var(--ink);font-family:var(--body)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chipbtn{cursor:pointer;border:1px solid var(--line);background:var(--raise);border-radius:999px;padding:6px 12px;font-weight:700;font-size:.86rem}
+.chipbtn[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#1d1600}
+.ticket{font-family:var(--mono);font-size:1.3rem;color:var(--gold);font-weight:600}
+.status{display:inline-block;font-size:.76rem;font-weight:800;border-radius:999px;padding:3px 10px}
+.s-rec{background:rgba(90,162,255,.16);color:var(--blue)}.s-val{background:rgba(242,194,48,.16);color:var(--gold)}.s-res{background:rgba(63,209,138,.16);color:var(--ok)}
+
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;border-left:4px solid var(--blue);display:grid;gap:2px}
+.stat.r{border-left-color:var(--red)}.stat.g{border-left-color:var(--gold)}.stat.m{border-left-color:var(--unk)}
+.stat b{font-family:var(--display);font-size:2rem;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat span{font-size:.84rem;color:var(--muted)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:880px;font-size:.9rem}
+th,td{text-align:center;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:#0a1a3e}
+td.num{font-variant-numeric:tabular-nums;text-align:center}
+tbody tr.click{cursor:pointer} tbody tr.click:hover{background:var(--raise)}
+.pill{display:inline-block;font-size:.76rem;font-weight:800;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.l-c{background:rgba(63,209,138,.15);color:var(--ok)}.l-p{background:rgba(242,194,48,.15);color:var(--gold)}
+.l-i{background:rgba(255,90,95,.16);color:var(--bad)}.l-u{background:rgba(131,150,184,.2);color:#c3cfe4}
+.pr-h{background:var(--red);color:#fff}.pr-m{background:var(--gold);color:#1d1600}.pr-l{background:var(--ok);color:#06231a}
+.par{font-size:.78rem;font-weight:700;border:1px dashed var(--line);border-radius:6px;padding:2px 7px;color:var(--muted);white-space:nowrap}
+.par.in{color:var(--ink);border-color:var(--muted)}
+.streams{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
+.streams i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.donut{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.donut svg{width:150px;height:150px;flex:none}
+.lg{display:grid;gap:6px;font-size:.9rem}
+.lg span{display:flex;gap:8px;align-items:center}.lg i{width:12px;height:12px;border-radius:3px}
+.hbar{display:grid;grid-template-columns:150px 1fr 40px;gap:8px;align-items:center;font-size:.86rem;margin-bottom:8px}
+.hbar .t{height:14px;background:var(--raise);border-radius:999px;overflow:hidden;display:flex}
+.hbar .t i{display:block;height:100%}
+.hbar b{text-align:right;font-variant-numeric:tabular-nums}
+.rec{display:grid;gap:10px;grid-template-columns:1fr}
+.rec .src{grid-template-columns:230px 1fr;gap:6px 16px;align-items:start;border-top-width:1px;border-left:5px solid var(--sb)}
+.rec .src.tpm{border-left-color:var(--tpm)}.rec .src.rp{border-left-color:var(--rp)}.rec .src.cit{border-left-color:var(--cit)}
+.rec .src .body{display:grid;gap:6px;min-width:0}
+.rec .kv.wide{grid-template-columns:auto 1fr auto 1fr;gap:4px 14px}
+.pd{display:grid;grid-template-columns:1fr;gap:14px}
+.phbox{display:grid;gap:8px}.phgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.phi{margin:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--raise)}
+.phi img{display:block;width:100%;height:120px;object-fit:cover}
+.phi figcaption{padding:6px 8px;font-size:.74rem;display:grid;gap:3px;color:var(--muted)}
+.phi a{color:var(--blue)}.ck.ok{color:var(--ok)}.ck.w{color:var(--gold)}
+.phadd{position:relative;cursor:pointer}.ph-in{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.ph{border:1px dashed var(--line);border-radius:10px;min-height:130px;display:grid;place-items:center;text-align:center;padding:10px;font-size:.8rem;color:var(--muted);background:rgba(255,255,255,.02)}
+.ph a{color:var(--gold);font-weight:700}
+@media (max-width:760px){.rec .src{grid-template-columns:1fr}.pd{grid-template-columns:1fr}.rec .kv.wide{grid-template-columns:auto 1fr}}
+.brief .ln{display:block}
+.brief.pb-h{border-left:5px solid var(--red)}.brief.pb-m{border-left:5px solid var(--gold)}.brief.pb-l{border-left:5px solid var(--ok)}
+.brief .prl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.src{border:1px solid var(--line);border-top:4px solid var(--sb);border-radius:12px;padding:12px;background:var(--raise);display:grid;gap:6px;font-size:.9rem;align-content:start}
+.src.tpm{border-top-color:var(--tpm)}.src.rp{border-top-color:var(--rp)}.src.cit{border-top-color:var(--cit)}
+.src h4{margin:0;font-family:var(--display);font-size:.9rem}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:0}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:600}
+.pipe{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.agent{display:grid;grid-template-columns:44px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;opacity:.3;transition:opacity .3s}
+.agent.done{opacity:1}
+.agent.redt{border-color:rgba(255,90,95,.6)}.agent.gate{border-color:rgba(242,194,48,.7)}
+.agent .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:.75rem;background:var(--raise);color:var(--blue)}
+.agent.redt .ic{color:var(--bad)}.agent.gate .ic{color:var(--gold)}
+.agent .bd{display:grid;gap:6px}
+.agent .nm{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.agent .nm b{font-family:var(--display)}
+.tag{font-size:.68rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:5px;background:var(--raise);color:var(--muted)}
+.agent ul{margin:0;padding-left:18px;display:grid;gap:3px;font-size:.92rem}
+.fix{display:grid;gap:3px;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:.9rem}
+.fix .was{color:var(--bad);text-decoration:line-through}.fix .now{color:var(--ok)}.fix .why{font-size:.8rem;color:var(--muted)}
+.brief{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--raise);display:grid;gap:8px;font-size:.93rem}
+.log{font-family:var(--mono);font-size:.78rem;background:#040b1d;border:1px solid var(--line);border-radius:12px;padding:12px;overflow-x:auto;white-space:pre;max-height:300px;color:#b9cdf0}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.acard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:8px;align-content:start}
+.acard .fence{font-size:.86rem;color:var(--muted);border-left:3px solid var(--red);padding-left:8px}
+.test{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.res{font-weight:800;font-size:.8rem;border-radius:6px;padding:3px 9px}
+.res.held{background:rgba(63,209,138,.15);color:var(--ok)}.res.fixed{background:rgba(242,194,48,.15);color:var(--gold)}
+.tk{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:var(--raise);border:1px solid var(--line);border-left:4px solid var(--cit);border-radius:12px;padding:12px}
+.tk .acts{display:flex;gap:6px;flex-wrap:wrap}
+.tk .acts button{cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 10px;font-weight:700;font-size:.8rem}
+.overlay{position:fixed;inset:0;background:rgba(2,8,22,.75);z-index:50;display:none;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
+.overlay.on{display:flex}
+.modal{background:var(--surface);border:1px solid var(--line);border-radius:18px;max-width:560px;width:100%;padding:20px;display:grid;gap:14px;margin-top:5vh}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+.hero.photo{position:relative;min-height:clamp(380px,62vh,620px);align-content:end;padding:clamp(20px,4vw,44px);background:linear-gradient(0deg,rgba(6,16,42,.92) 0%,rgba(6,16,42,.45) 40%,rgba(6,16,42,0) 70%),url(img/hero.jpg) center 40%/cover no-repeat;border-color:#2a4c94}
+.hero.photo h2{font-size:clamp(1.6rem,3.6vw,2.6rem)}
+.hero.photo p{max-width:52ch}
+.credit{position:absolute;right:12px;bottom:8px;font-size:.7rem;color:rgba(238,243,251,.75)}
+.radarbox{display:grid;gap:12px}
+.radar{width:100%;max-width:340px;justify-self:center;aspect-ratio:1}
+.radar text{font-family:var(--body)}
+.pin{cursor:pointer}
+.near{display:grid;gap:8px}
+.nrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:10px}
+.nrow.on{border-color:var(--gold)}
+.dist{font-family:var(--mono);font-weight:600;color:var(--gold);min-width:56px}
+.dot{width:12px;height:12px;border-radius:50%}
+footer{border-top:1px solid var(--line);font-size:.8rem;color:var(--muted)}
+footer .wrap{padding:14px 16px 26px;display:grid;gap:4px}
+.about-hero{display:grid;gap:12px;background:radial-gradient(120% 140% at 100% 0%,rgba(90,162,255,.18),transparent 55%),var(--surface)}
+.eyebrow{font-size:.75rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.about-hero h2{font-size:clamp(1.4rem,3vw,2rem)}
+.about-hero p{max-width:80ch}
+.flow{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.flow2{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.flow2 .fs{display:grid;gap:2px;padding:8px 12px;border-radius:10px;background:var(--raise);border:1px solid var(--line);border-left:4px solid var(--c,var(--blue));font-weight:700;font-size:.86rem}.flow2 .fs small{font-weight:500;color:var(--muted);font-size:.74rem}.flow2 .fs.ai{--c:var(--gold)}.flow2 .fs.hu{--c:var(--ok)}.flow2 .arr{align-self:center;color:var(--gold);font-weight:800;font-size:1.2rem}
+.flow .fs{display:grid;gap:2px;padding:8px 12px;border-radius:10px;background:var(--raise);border:1px solid var(--line);border-left:4px solid var(--c,var(--blue));font-weight:700;font-size:.86rem}
+.flow .fs small{font-weight:500;color:var(--muted);font-size:.74rem}
+.flow .fs.ai{--c:var(--gold)}.flow .fs.hu{--c:var(--ok)}
+.flow .arr{align-self:center;color:var(--gold);font-weight:800;font-size:1.2rem}
+.sech{margin-top:6px;font-size:1.15rem}
+.ifc{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.ic-card{display:grid;gap:6px;align-content:start}
+.ic-card svg{width:64px;height:64px}
+.ic-card h4{margin:2px 0 0;font-size:1.05rem}
+.ic-card ul{margin:4px 0;padding-left:18px;display:grid;gap:4px;font-size:.88rem}
+.ic-card .note{font-size:.8rem;color:var(--gold);margin:0;border-top:1px solid var(--line);padding-top:8px}
+.lim{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.lim .li{display:grid;gap:4px;align-content:start;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);font-size:.88rem}
+.lim .li span{color:var(--muted)}
+.rep-ctl{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+.rep-ctl select{background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:7px 8px}
+#rep-paper{background:#fff;color:#1B2540;max-width:860px;margin:14px auto;padding:34px 40px;border-radius:6px;font-family:Arial,Helvetica,sans-serif;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+#rep-paper svg{max-width:100%;height:auto}
+#rep-paper table{margin:6px 0 12px;min-width:0!important;width:100%!important;font-size:inherit}
+#rep-paper th,#rep-paper td{border-bottom:inherit}
+@media print{body{background:#fff!important}body *{visibility:hidden}#rep-paper,#rep-paper *{visibility:visible}#rep-paper{position:absolute;left:0;top:0;margin:0;max-width:none;box-shadow:none;padding:0}#rep-paper .pgb{border:0!important;margin:0!important}}
+.about-hero{background:#F4F7FC!important;color:#1B2540;text-align:center;justify-items:center;border-color:#D7DEEB;--ink:#1B2540;--muted:#5B6B8C}
+.about-hero h2{color:#0B2A6B;font-size:clamp(1.6rem,3.4vw,2.3rem);letter-spacing:.04em}
+.about-hero .lead{max-width:76ch;margin:0 auto;color:#1B2540}
+.about-hero .eyebrow{color:#A87400}
+.about-hero .small{color:#5B6B8C}
+.srcs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.srcs span{display:grid;gap:2px;padding:9px 14px;border-radius:10px;background:#fff;border:1px solid #D7DEEB;border-top:4px solid var(--c);font-weight:700;font-size:.86rem;min-width:170px;text-align:center}
+.srcs small{font-weight:500;color:#5B6B8C;font-size:.74rem}
+.ptitle{margin:10px 0 0;color:#0B2A6B}
+.process{display:flex;align-items:flex-start;justify-content:center;gap:4px;flex-wrap:wrap;width:100%}
+.pstep{display:grid;justify-items:center;gap:6px;width:150px;text-align:center}
+.pstep .pic{position:relative;width:70px;height:70px;border-radius:50%;background:#fff;border:3px solid var(--c);color:var(--c);display:grid;place-items:center}
+.pstep .pic svg{width:36px;height:36px}
+.pstep .pic span{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--c);color:#fff;font-weight:800;font-size:.8rem;display:grid;place-items:center}
+.pstep b{color:#0B2A6B}.pstep p{margin:0;font-size:.8rem;color:#5B6B8C}
+.parr{color:#B07D00;width:30px;margin-top:22px}.parr svg{width:30px;height:30px}
+@media (max-width:760px){.parr{transform:rotate(90deg);margin:0}.process{flex-direction:column;align-items:center}}
+.ic-card{justify-items:center;text-align:center}.ic-card ul{text-align:left;justify-self:stretch}.ic-card .note{text-align:center;justify-self:stretch}
+.limlist{margin:0;padding-left:20px;display:grid;gap:8px;font-size:.92rem}.limlist b{color:var(--gold)}
+.pgroup{display:grid;gap:10px;margin-bottom:16px}.phead{display:flex;gap:12px;align-items:center}.phead p{margin:2px 0 0}
+.pnum{background:var(--gold);color:#0B2A6B;font-weight:800;border-radius:999px;padding:6px 12px;white-space:nowrap;font-size:.85rem}
+.pcards{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.qsum{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 14px}.qsum span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.88rem}.qsum .ok b{color:var(--ok)}.qsum .fx b{color:var(--gold)}
+.qgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.qcard{position:relative;display:grid;justify-items:center;text-align:center;gap:6px;padding:16px 12px;border-radius:14px;background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--ok)}
+.qcard.fixed{border-top-color:var(--gold)}.qcard svg{width:44px;height:44px;color:var(--blue)}.qcard.fixed svg{color:var(--gold)}
+.qcard .qn{position:absolute;top:8px;left:10px;font-size:.75rem;color:var(--muted)}.qcard p{margin:0}
+.card.light{background:#F4F7FC;color:#1B2540;border-color:#D7DEEB;--ink:#1B2540;--muted:#5B6B8C;--line:#D7DEEB;--raise:#ffffff;--surface:#ffffff;--gold:#9A6B00;--rp:#9A6B00;--tpm:#6A3FC0;--cit:#0F7A5E;--sb:#2459B8;--ok:#1E7A45;--blue:#2459B8}
+.card.light .src{background:#fff}.card.light select{background:#fff!important;color:#1B2540;border-color:#B9C5DB!important}
+.card.light .btn.ghost{color:#0B2A6B;border-color:#0B2A6B}
+.gbtns{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-top:10px}.gbtns>div{display:grid;gap:6px;align-content:start}.gbtns small{color:var(--muted);font-size:.76rem;line-height:1.35}
+.decnote{width:100%;margin-top:8px;background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:var(--ink);min-height:54px}
+.brief ol.iv{margin:2px 0 4px;padding-left:20px;display:grid;gap:3px}
+.tsteps{text-align:left;margin:4px 0;padding-left:20px;display:grid;gap:6px}.tsteps li span{display:block;color:var(--muted);font-size:.82rem}
+.dhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}.dhead h2{margin:0}.dhead p{margin:0}
+.stats.kpi .stat{text-align:left;cursor:pointer;font:inherit;color:inherit;display:grid;gap:2px;align-content:start;transition:transform .12s,box-shadow .12s}
+.stats.kpi .stat:hover,.stats.kpi .stat:focus-visible{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.stats.kpi .stat span{font-weight:700;font-size:.86rem;color:var(--ink)}.stats.kpi .stat small{font-size:.76rem;color:var(--muted)}
+p.srcn{font-size:.72rem;color:var(--muted);margin:6px 0 0;line-height:1.4}
+[hidden]{display:none!important}
+table.rov td{white-space:nowrap}
+.card.cen{display:grid;justify-items:center;text-align:center}.card.cen h3{justify-self:stretch;text-align:left}
+.pie{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:center}.pie svg{width:190px;height:190px}
+.pie .lg{display:grid;gap:6px;text-align:left;font-size:.84rem}.pie .lg span{display:grid;grid-template-columns:12px 1fr auto 42px;gap:8px;align-items:center}.pie .lg i{width:12px;height:12px;border-radius:3px}.pie .lg b{text-align:right}.pie .lg em{font-style:normal;color:var(--muted);text-align:right}
+.pie .lg .lk{cursor:pointer;border-radius:6px;padding:2px 4px}.pie .lg .lk:hover{background:var(--raise)}
+.sigs{display:grid;gap:8px}.sig{display:grid;grid-template-columns:96px 1fr;align-items:center;gap:12px;text-align:left;background:var(--raise);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:10px;padding:8px 12px;color:var(--ink);font:inherit;cursor:pointer}
+.sig b{font-size:1.25rem;color:var(--c);text-align:right}.sig span{font-weight:700;font-size:.86rem;display:grid}.sig small{font-weight:400;color:var(--muted);font-size:.74rem}.sig:hover{filter:brightness(1.15)}
+table.rov th,table.rov td{text-align:center}table.rov td:first-child,table.rov th:first-child{text-align:left}
+.rlink,.nlink{background:none;border:0;color:var(--ink);font:inherit;font-weight:700;cursor:pointer;padding:0;text-decoration:underline dotted;text-underline-offset:3px}.rlink:hover,.nlink:hover{color:var(--gold)}
+.mbar{width:90px;height:8px;border-radius:99px;background:#11295a;display:inline-block;vertical-align:middle;margin-right:6px;overflow:hidden}.mbar i{display:block;height:100%;background:var(--ok)}
+.tchip{display:inline-block;font-size:.74rem;padding:3px 8px;border-radius:99px;border:1px solid var(--c);color:var(--c);white-space:nowrap}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}.filters input,.filters select{background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:var(--ink);font:inherit;font-size:.85rem}.filters input{flex:1;min-width:200px}
+.pager{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}.pager button{min-width:38px;padding:7px 10px;border-radius:8px;background:var(--raise);border:1px solid var(--line);color:var(--ink);font:inherit;cursor:pointer}.pager button[aria-current]{background:var(--gold);color:#0B2A6B;font-weight:800;border-color:var(--gold)}.pager span{align-self:center;color:var(--muted)}
+.robanner.fb{min-height:clamp(220px,34vh,360px)}
+.coact{background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:5px 6px;color:var(--ink);font:inherit;font-size:.8rem;max-width:200px}
+.tad{display:block;margin-top:6px}.tad input{background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:4px 6px;color:var(--ink);font:inherit;font-size:.8rem;color-scheme:dark}
+.hero.co{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-radius:0;border-left:0;border-right:0;min-height:clamp(320px,52vh,560px);background:linear-gradient(0deg,rgba(6,16,42,.85) 0%,rgba(6,16,42,0) 35%),url(img/co.jpg) center 40%/cover no-repeat,#0b2257}
+body{overflow-x:hidden}
+html{background:#06102a}
+body.co-bg{background:transparent!important}
+body.co-bg::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(rgba(6,16,42,.78),rgba(6,16,42,.86)),url(img/co.jpg) center 40%/cover no-repeat}
+body.co-bg .hero.co{background:linear-gradient(0deg,rgba(6,16,42,.7) 0%,rgba(6,16,42,0) 30%),url(img/co.jpg) center 40%/cover no-repeat fixed;border:0}
+body.co-bg .dhead h2,body.co-bg .dhead p,body.co-bg p.srcn,body.co-bg .sech{text-shadow:0 1px 3px rgba(0,0,0,.6)}
+body.ro-bg,body.pub-bg{background:transparent!important}
+body.ro-bg::before,body.pub-bg::before{content:"";position:fixed;inset:0;z-index:-1}
+body.ro-bg::before{background:linear-gradient(rgba(6,16,42,.8),rgba(6,16,42,.88)),url(img/ro.jpg) center top/cover no-repeat,url(img/ro-web.jpg) center 30%/cover no-repeat,#0b2257}
+body.pub-bg::before{background:linear-gradient(rgba(6,16,42,.78),rgba(6,16,42,.88)),url(img/hero.jpg) center 40%/cover no-repeat,#0b2257}
+body.ro-bg .robanner{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-radius:0;border:0}
+body.ro-bg .robanner.fb{min-height:clamp(340px,56vh,600px);background:linear-gradient(0deg,rgba(6,16,42,.6) 0%,rgba(6,16,42,0) 25%),url(img/ro-web.jpg) center 30%/cover no-repeat fixed,#0b2257}
+body.pub-bg .hero.photo{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-radius:0;border:0;padding-left:max(20px,calc(50vw - 560px));padding-right:max(20px,calc(50vw - 560px));background:linear-gradient(0deg,rgba(6,16,42,.92) 0%,rgba(6,16,42,.45) 40%,rgba(6,16,42,0) 70%),url(img/hero.jpg) center 40%/cover no-repeat fixed}
+body.ro-bg #ro-title,body.ro-bg #v-roqueue>.btnrow p,body.pub-bg h2,body.pub-bg h3{text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.brand h1 .h1t{color:var(--ink,#eef3fb)}
+.brand h1 .pha{height:.73em;width:auto;vertical-align:baseline;margin:0 .03em 0 .01em;display:inline-block}
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap"><div class="hrow">
+  
+  <svg class="logo" viewBox="0 0 64 64" role="img" aria-label="UGNAY-SUBAY mark">
+    <circle cx="32" cy="32" r="30" fill="#0a2a6e" stroke="#f2c230" stroke-width="3"/>
+    <circle cx="22" cy="26" r="8" fill="none" stroke="#5aa2ff" stroke-width="4"/>
+    <circle cx="42" cy="26" r="8" fill="none" stroke="#e0353f" stroke-width="4"/>
+    <circle cx="32" cy="43" r="8" fill="none" stroke="#f2c230" stroke-width="4"/>
+  </svg>
+  <div class="brand"><h1 aria-label="UGNAY-SUBAY"><span aria-hidden="true" class="h1t">UGNAY<span>-</span>SUB<svg class="pha" viewBox="0 0 100 110" aria-hidden="true" fill="currentColor"><path d="M45 0 L58 1 L62 10 L59 18 L66 27 L71 38 L60 41 L51 35 L42 39 L37 30 L43 20 L41 10 Z"/><path d="M35 45 L46 46 L41 60 L32 80 L24 100 L17 110 L3 108 L11 91 L19 73 L27 57 Z"/><path d="M62 45 L74 44 L79 56 L83 68 L78 75 L88 79 L97 92 L100 108 L85 110 L79 100 L70 104 L63 96 L69 86 L65 72 L63 58 Z"/><path d="M27 68 L41 64 L52 67 L63 63 L69 70 L58 77 L45 75 L30 80 Z"/></svg>Y</span></h1><p>From Evidences to Results</p></div>
+  <div class="viewas"><label for="role">View as</label><select id="role"><option value="co">DILG Central Office</option><option value="ro">DILG Regional Office</option><option value="pub">Public</option></select><label for="fund" class="fundc">Fund</label><select id="fund" class="fundc"><option value="all">All sources</option><option value="LGSF">LGSF</option><option value="20% DF">20% DF (LIME-20)</option></select></div>
+</div></div></div>
+<div class="navbar"><div class="wrap"><nav id="nav" aria-label="Sections"></nav><span class="slash" aria-hidden="true"></span></div></div>
+<div class="crumb"><div class="wrap"><span id="crumb"></span><span class="demo">● PUBLIC DEMO · NOT AN OFFICIAL DILG SYSTEM</span></div></div>
+
+<main><div class="wrap">
+
+<!-- PUBLIC: SEARCH -->
+<section class="view" id="v-search">
+  <div class="hero photo"><h2>Your Eyes on the Ground. <span>Your Voice in Governance.</span></h2><p class="small">Look up a government-funded local project, see its reported progress, and tell us what you see on the ground.</p><span class="credit">Photo: farm-to-market road</span></div>
+  <div class="split">
+    <div class="card">
+      <h3>Search projects</h3>
+      <div class="field"><label for="q">Project name, ID or location</label><input id="q" type="search" placeholder="e.g. road, Masagana, NCR-EC-2024-002"></div>
+      <div class="fgrid">
+        <div class="field"><label for="f-reg">Region</label><select id="f-reg"></select></div>
+        <div class="field"><label for="f-prov">Province</label><select id="f-prov"></select></div>
+        <div class="field"><label for="f-lgu">City / Municipality</label><select id="f-lgu"></select></div>
+        <div class="field"><label for="f-yr">Year</label><select id="f-yr"><option value="">All years</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select></div>
+        <div class="field"><label for="f-cat">Project category</label><select id="f-cat"></select></div>
+      </div>
+      <div class="btnrow"><button class="btn" type="button" id="dosearch">Search projects</button><button class="btn ghost" type="button" id="clear">Clear filters</button></div>
+      <div class="results" id="results"><div class="hint">Type a project name or location, or pick a filter, then press <b>Search projects</b>.</div></div>
+    </div>
+    <div style="display:grid;gap:16px">
+      <div class="card">
+        <h3>Track your feedback</h3>
+        <p class="small">Enter your ticket number to see its status.</p>
+        <div class="field"><label for="tno">Ticket number</label><input id="tno" placeholder="US-…" autocomplete="off"></div>
+        <div class="btnrow"><button class="btn blue" type="button" id="track">Check status</button></div>
+        <div id="trackres"></div>
+      </div>
+      <div class="card radarbox">
+        <h3>Projects near you</h3>
+        <p class="small">Projects around you. On a phone the app would use your GPS; this prototype can't read location, so pick where you are. Pins use the barangay or town location, not exact geotags.</p>
+        <div class="fgrid">
+          <div class="field"><label for="h-prov">Province</label><select id="h-prov"></select></div>
+          <div class="field"><label for="here">City / Municipality</label><select id="here"></select></div>
+          <div class="field"><label for="rad">Within</label><select id="rad"><option value="5">5 km</option><option value="10">10 km</option><option value="20" selected>20 km</option><option value="30">30 km</option></select></div>
+        </div>
+        <svg class="radar" id="radar" viewBox="0 0 300 300" role="img" aria-label="Map of nearby projects"></svg>
+        <div class="streams"><span><i style="background:var(--ok)"></i>Reported complete</span><span><i style="background:var(--gold)"></i>Ongoing</span><span><i style="background:var(--blue)"></i>You are here</span></div>
+        <div class="near" id="near"></div>
+        <div class="hint">Can't find the project? Report it with its location and a landmark. <button class="btn ghost" type="button" id="nofind" style="margin-top:8px">Report an unlisted project</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RO: QUEUE -->
+<section class="view" id="v-roqueue">
+  <figure class="robanner fb" role="img" aria-label="Regional office building"></figure>
+  <div class="btnrow" style="justify-content:space-between;align-items:flex-end"><div><h2 id="ro-title">Regional Monitoring and Evaluation</h2><p class="small">Review projects, check evidences, and decide which project needs a closer look.</p></div><div class="field" style="min-width:240px"><label for="ro-reg">Your region</label><select id="ro-reg"></select></div></div>
+  <div class="stats kpi" id="ro-kpis"></div>
+  <div class="grid2"><div class="card cen"><h3>Project status</h3><div id="ro-pie1"></div></div><div class="card cen"><h3>Projects by province / city</h3><div id="ro-pie2"></div></div></div>
+  <div class="card" id="ro-list">
+    <div class="btnrow" style="justify-content:space-between"><h3>Projects in your region</h3><span class="small" id="ro-count"></span></div>
+    <div class="filters"><input id="qf-q" type="search" placeholder="Search code, title or LGU" aria-label="Search"><select id="qf-prov" aria-label="Province or city"></select><select id="qf-st" aria-label="Status"><option value="">All statuses</option><option>Completed</option><option>On-going</option><option>Not Yet Started</option><option value="other">Other</option></select><select id="qf-pr" aria-label="Priority"><option value="">All priorities</option><option value="h">High</option><option value="m">Medium</option><option value="l">Low</option></select><select id="qf-ev" aria-label="Evidence"><option value="">All evidence labels</option><option value="c">Consistent</option><option value="p">Partially Consistent</option><option value="i">Inconsistent</option><option value="u">Insufficient Evidence</option></select><select id="qf-dec" aria-label="Decision"><option value="">All decisions</option><option value="pending">Pending</option><option value="done">Decided</option></select><button class="btn ghost" type="button" id="qf-x">Clear filters</button></div>
+    <div class="tablewrap"><table><thead><tr><th>Project ID</th><th>LGU</th><th>Program · type</th><th>Cost (₱)</th><th>Physical</th><th>Citizen tickets</th><th>Evidence</th><th>AI Review Priority</th><th>Decision</th></tr></thead><tbody id="ro-reg-tb"></tbody></table></div>
+    <div class="pager" id="ro-pg"></div>
+    <p class="small">Click a row to review. Sorted by AI Review Priority. Official Projects-at-Risk status is never changed by the AI.</p>
+  </div>
+</section>
+
+<!-- RO: REVIEW -->
+<section class="view" id="v-roreview">
+  <div class="card light">
+    <div class="btnrow"><h2 style="flex:1">Review a project</h2><select id="pick" style="background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:9px 11px;min-width:280px" aria-label="Project"></select><button class="btn" type="button" id="run">Run review</button></div>
+    <div class="rec" id="streams"></div>
+  </div>
+  <ol class="pipe" id="pipe"></ol>
+  <div id="logcard" hidden><button type="button" id="copylog" hidden></button><div id="log" hidden></div></div>
+</section>
+
+<!-- RO: FEEDBACK -->
+<section class="view" id="v-rofeedback">
+  <h2>Citizen feedback inbox</h2>
+  <p class="small">Observations from the public page for your region. Validate before using them as evidence.</p>
+  <div style="display:grid;gap:8px" id="inbox"></div>
+</section>
+
+<!-- CO: DASHBOARD -->
+<section class="view" id="v-codash">
+  <div class="hero co" role="img" aria-label="DILG-NAPOLCOM Center with the Philippine flag"></div>
+  <div class="dhead"><h2>Dashboard</h2><p class="small" id="co-scope"></p></div>
+  <div class="stats kpi" id="co-kpis"></div>
+  <p class="srcn" id="co-src"></p>
+  <div class="card" id="co-drill" hidden><div class="btnrow" style="justify-content:space-between"><h3 id="drill-t"></h3><button class="btn ghost" type="button" id="drill-x">Close</button></div><p class="small" id="drill-s"></p><div class="tablewrap"><table><thead id="drill-h"></thead><tbody id="drill-b"></tbody></table></div><div class="pager" id="drill-p"></div></div>
+  <div class="grid2">
+    <div class="card cen"><h3>Physical status</h3><div id="co-pie"></div><p class="srcn" id="asof"></p></div>
+    <div class="card"><h3>Evidence and risk signals</h3><div class="sigs" id="sigs"></div><p class="srcn">Click a signal to see the projects. Signals are reasons to check, not findings.</p></div>
+  </div>
+  <div class="card" id="co-rov"><h3>Regional overview</h3><p class="small">Click a region to open its Regional Office view, or a number to see the projects. Many escalations from one region may point to gaps in regional capacity; check before concluding.</p><div class="tablewrap"><table class="rov"><thead><tr><th>Region</th><th>Projects</th><th>Completion rate</th><th>High AI Review Priority</th><th>Funded FY 2022–2024, not yet started</th><th>Completed, no completion photo</th><th>Escalated to CO</th><th>TPM 2026 report</th></tr></thead><tbody id="rov"></tbody></table></div><p class="srcn" id="rov-src"></p></div>
+</section>
+
+<!-- CO: AGENTS -->
+
+<!-- CO: TESTS -->
+<section class="view" id="v-coreport">
+  <div class="card rep-ctl"><div><h2>National Monitoring and Evaluation (M&amp;E) Report</h2><p class="small">A nationwide perspective of project progress, monitoring findings, and regional concerns. Consolidated key insights and actions taken to support evidence-based, informed decision-making and guide management interventions.</p></div>
+    <div class="btnrow"><label class="small" for="rep-reg">Coverage</label><select id="rep-reg"></select><button class="btn" type="button" id="rep-go">Refresh</button><button class="btn" type="button" id="rep-word">Download Word</button><button class="btn ghost" type="button" id="rep-print">Download PDF</button></div><span class="small" id="rep-msg"></span></div>
+  <div id="rep-paper"></div>
+</section>
+<section class="view" id="v-cotests"><h2>Quality checks</h2><p class="small">Each check gives the agents a hard case. "Caught and fixed" means the draft failed and the Red-Team Agent corrected it before human review.</p><div style="display:grid;gap:8px" id="tests"></div></section>
+
+<!-- CO: ABOUT -->
+<section class="view" id="v-coabout">
+  <div class="card about-hero">
+    <span class="eyebrow">About the Program</span>
+    <h2>UGNAY-SUBAY</h2>
+    <p class="lead">An AI-assisted monitoring platform for locally funded infrastructure: projects under the Local Government Support Fund (LGSF) and the 20% Development Fund. It <i>links</i> (ugnay) and <i>tracks</i> (subay) four streams of evidence on each project, so reviewers see where the sources agree, where they conflict, and what to check first.</p>
+    <div class="srcs"><span style="--c:#2F6FD6">Project details<small>SubayBAYAN</small></span><span style="--c:#7B4FD0">Independent validation<small>TPM</small></span><span style="--c:#B07D00">Inter-agency monitoring<small>RPMES / LIME-20</small></span><span style="--c:#13896B">Citizen feedback<small>Public reports</small></span></div>
+    <h3 class="ptitle">How it works</h3>
+    <div class="process"><div class="pstep"><div class="pic" style="--c:#2F6FD6"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 14h28M10 24h28M10 34h18" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg><span>1</span></div><b>Collect</b><p>The four evidence streams are brought together for every project.</p></div><div class="parr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="pstep"><div class="pic" style="--c:#7B4FD0"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="18" cy="24" r="10" fill="none" stroke="currentColor" stroke-width="3.2"/><circle cx="30" cy="24" r="10" fill="none" stroke="currentColor" stroke-width="3.2"/></svg><span>2</span></div><b>Compare</b><p>AI agents check where the sources agree or conflict and rank what to review.</p></div><div class="parr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="pstep"><div class="pic" style="--c:#D64545"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6l15 6v10c0 10-7 17-15 20-8-3-15-10-15-20V12z" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><path d="M18 24l5 5 8-9" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>3</span></div><b>Challenge</b><p>A Red-Team Agent removes unsupported claims, bias and privacy risks.</p></div><div class="parr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="pstep"><div class="pic" style="--c:#1E8A4C"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="15" r="7" fill="none" stroke="currentColor" stroke-width="3.2"/><path d="M11 40c2-8 7-12 13-12s11 4 13 12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg><span>4</span></div><b>Decide</b><p>A person approves, returns or escalates each brief.</p></div><div class="parr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="pstep"><div class="pic" style="--c:#B07D00"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="11" y="7" width="26" height="34" rx="3" fill="none" stroke="currentColor" stroke-width="3.2"/><path d="M17 33V26M24 33V20M31 33V15" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg><span>5</span></div><b>Report</b><p>Findings feed the Regional and National M&amp;E Reports for management.</p></div></div>
+    <p class="small">Prototype for PP5538 AI for Public Policy, Lee Kuan Yew School of Public Policy, NUS. Not an official DILG system.</p>
+  </div>
+
+  <h3 class="sech">Interfaces</h3>
+  <div class="ifc">
+    <div class="card ic-card">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="rgba(63,209,138,.14)"/><circle cx="24" cy="24" r="7" fill="none" stroke="var(--ok)" stroke-width="3"/><path d="M12 46c2-8 7-12 12-12s10 4 12 12" fill="none" stroke="var(--ok)" stroke-width="3" stroke-linecap="round"/><circle cx="42" cy="38" r="7" fill="none" stroke="var(--gold)" stroke-width="3"/><path d="M47 43l6 6" stroke="var(--gold)" stroke-width="3.4" stroke-linecap="round"/></svg>
+      <h4>Public</h4><p class="small">Citizens and civil society</p>
+      <ul><li>Search any project by code, name or place</li><li>Find projects near you</li><li>Share observations and geotagged photos</li><li>Track a ticket to resolution</li></ul>
+      <p class="note">Sees reported progress only, never AI ratings.</p>
+    </div>
+    <div class="card ic-card">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="rgba(90,162,255,.14)"/><rect x="18" y="14" width="28" height="38" rx="4" fill="none" stroke="var(--blue)" stroke-width="3"/><rect x="25" y="10" width="14" height="8" rx="2" fill="var(--blue)"/><path d="M24 32l5 5 11-11" fill="none" stroke="var(--ok)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 45h16" stroke="var(--blue)" stroke-width="3" stroke-linecap="round"/></svg>
+      <h4>DILG Regional Office</h4><p class="small">Monitoring and validation units</p>
+      <ul><li>Review queue ranked by AI Review Priority</li><li>Agent review with a red-team check</li><li>Citizen feedback inbox</li><li>Approve, return or escalate each brief</li></ul>
+      <p class="note">Every decision is made and logged by a person.</p>
+    </div>
+    <div class="card ic-card">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="rgba(242,194,48,.14)"/><path d="M14 48h36" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/><rect x="18" y="32" width="7" height="14" rx="1.5" fill="var(--blue)"/><rect x="29" y="24" width="7" height="22" rx="1.5" fill="var(--gold)"/><rect x="40" y="16" width="7" height="30" rx="1.5" fill="var(--red)"/><path d="M17 26l11-8 9 5 11-9" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h4>DILG Central Office</h4><p class="small">Program management and oversight</p>
+      <ul><li>National dashboard and regional patterns</li><li>TPM report status by region</li><li>Decision log across regions</li><li>Agent rules and quality checks</li></ul>
+      <p class="note">Sees patterns to target support, not to rank LGUs.</p>
+    </div>
+  </div>
+
+  <h3 class="sech">The agents</h3>
+  <p class="small" style="margin-top:-6px">The agent argues; the human decides.</p>
+  <div id="acards"></div>
+
+  <h3 class="sech">Limitations</h3>
+  <div class="card"><ul class="limlist"><li><b>Data coverage.</b> Project details come from the LGSF database extract (as of 4 Nov 2026) and the LIME-20 export of 20% Development Fund projects, public fields only. SubayBAYAN project exports and LIME-20 / RPMES forms (FY 2022–2026) add geotagged-photo counts and monthly accomplishment reports; monthly RPMES reports are available mainly for projects enrolled from FY 2025. TPM findings cover the regions that have submitted terminal reports.</li><li><b>Approximate locations.</b> Pins use barangay or town centres. Exact sites come only from geotagged photos.</li><li><b>Evidence, not verdicts.</b> A mismatch is a reason to check, never proof of fraud. TPM ratings are perception surveys, not engineering verification. Matches to TPM reports are likely, not certain.</li><li><b>Official status untouched.</b> AI Review Priority is separate from the official Projects-at-Risk list and never changes it.</li><li><b>Privacy.</b> No names of citizens or respondents. Tickets and photos stay on this device in the prototype; nothing is sent anywhere.</li><li><b>Public version.</b> RPMES risk ratings, exception reports and TPM findings are excluded; project details are limited to fields SubayBAYAN already publishes.</li><li><b>Prototype scope.</b> Agents run fixed rules in the browser (demo mode). Six training cases are synthetic, for testing the red-team step. A live version needs a data-sharing agreement with DILG.</li></ul></div>
+</section>
+
+</div></main>
+
+<div class="overlay" id="ov" role="dialog" aria-modal="true" aria-labelledby="m-h">
+  <div class="modal">
+    <form id="fform" style="display:grid;gap:14px">
+      <div id="fbody" style="display:grid;gap:12px">
+        <h3 id="m-h">Share what you see</h3>
+        <p class="small" id="m-proj"></p>
+        <div class="field"><span style="font-weight:700;font-size:.9rem">What did you notice?</span>
+          <div class="chips" id="obs">
+            <button type="button" class="chipbtn" data-o="Looks complete and in use" aria-pressed="false">Looks complete and in use</button>
+            <button type="button" class="chipbtn" data-o="Work has stopped" aria-pressed="false">Work has stopped</button>
+            <button type="button" class="chipbtn" data-o="Not what was described" aria-pressed="false">Not what was described</button>
+            <button type="button" class="chipbtn" data-o="Quality concern" aria-pressed="false">Quality concern</button>
+            <button type="button" class="chipbtn" data-o="Can't find it at the site" aria-pressed="false">Can't find it at the site</button>
+          </div></div>
+        <div id="unl" class="fgrid" style="display:none">
+          <div class="field"><label for="u-reg">Region</label><select id="u-reg"></select></div>
+          <div class="field"><label for="u-loc">City/municipality and barangay</label><input id="u-loc" maxlength="80" placeholder="e.g. Bayan ng Malinaw, Brgy. Ilaya"></div>
+        </div>
+        <div class="field"><label for="fdesc">Details and landmark</label><textarea id="fdesc" maxlength="300" placeholder="What you saw, when, and a nearby landmark. Please don't include anyone's name."></textarea></div>
+        <div class="btnrow"><button class="btn" type="submit">Submit (demo)</button><button class="btn ghost" type="button" id="fcancel">Cancel</button></div>
+      </div>
+      <div id="fdone" style="display:none;gap:10px;text-align:center">
+        <h3>Demo ticket created</h3>
+        <span class="ticket" id="tkno"></span>
+        <p class="small">Keep this number to track your report.</p>
+        <ol class="tsteps"><li><b>Received</b><span>Your report goes to the DILG Regional Office for that region.</span></li><li><b>Under validation</b><span>Staff check it against the project records and, if needed, visit the site.</span></li><li><b>Resolved</b><span>The result is posted to your ticket. Track it any time with the number above.</span></li></ol>
+        <p class="small">Prototype: nothing was sent. The ticket appears in that Regional Office's inbox on this device only.</p>
+        <div class="btnrow" style="justify-content:center"><button class="btn" type="button" id="fclose">Done</button></div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer><div class="wrap"><span>UGNAY-SUBAY · Prototype · Project records from the LGSF database extract and LIME-20 (public fields); review findings on training cases are synthetic · Demo mode runs fixed rules in your browser · Not affiliated with or endorsed by DILG.</span></div></footer>
+
+<script>window.PUBLIC_BUILD=true;</script>
+<script src="data/projects.js"></script>
+<script src="data/tpm.js"></script>
+<script src="data/ext.js"></script>
+<script src="data/rlip.js"></script>
+<script>
+(function(){
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+  function peso(n){return n.toLocaleString("en-US");}
+  function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k));localStorage.setItem(k,JSON.stringify(v));}catch(e){return null;}}
+  function $(id){return document.getElementById(id);}
+
+  /* ---------- synthetic projects ---------- tpm:[gov,process,results,observed%,note] */
+  var P=[{"id": "NCR-RD-2024-001", "reg": "NCR", "lgu": "Lungsod ng Masagana", "brgy": "Brgy. Rizal", "yr": 2024, "prog": "LGSF-SBDP", "type": "Road", "title": "Concreting of local road in Brgy. Rizal", "cost": 20200000, "status": "Completed", "phys": 100, "fin": 88, "days": 95, "photos": 2, "ben": 600, "iu": "Municipal LGU", "par": true, "rp": "Issue raised in inter-agency meeting", "tpm": ["Needs improvement", "Satisfactory", "Partly complete", 60, "Two segments unfinished; ponding after rain."], "lat": 14.59044, "lng": 120.93111}, {"id": "NCR-EC-2024-002", "reg": "NCR", "lgu": "Lungsod ng Malinaw", "brgy": "Brgy. Mabini", "yr": 2024, "prog": "LGSF-SBDP", "type": "Evacuation center", "title": "Construction of evacuation center in Brgy. Mabini", "cost": 13300000, "status": "Completed", "phys": 100, "fin": 100, "days": 140, "photos": 0, "ben": 4100, "iu": "Municipal LGU", "par": false, "rp": "No report", "tpm": ["Needs improvement", "Needs improvement", "Not observed at geotagged site", 0, "No structure found at the recorded coordinates."], "lat": 14.66865, "lng": 120.98461}, {"id": "NCR-WS-2026-003", "reg": "NCR", "lgu": "Lungsod ng Liwanag", "brgy": "Brgy. Malaya", "yr": 2026, "prog": "LGSF-GEF", "type": "Water system", "title": "Construction of Level II water system in Brgy. Malaya", "cost": 6500000, "status": "On-going", "phys": 95, "fin": 90, "days": 20, "photos": 4, "ben": 12500, "iu": "City LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Needs improvement", "Partly complete", 70, "Tank built; distribution lines incomplete in two puroks."], "lat": 14.54278, "lng": 121.02711}, {"id": "CAR-FC-2024-004", "reg": "CAR", "lgu": "Bayan ng Kalinaw", "brgy": "Brgy. Rizal", "yr": 2024, "prog": "LGSF-SBDP", "type": "Flood control", "title": "Construction of drainage canal and flood wall in Brgy. Rizal", "cost": 15500000, "status": "On-going", "phys": 90, "fin": 92, "days": 45, "photos": 3, "ben": 1200, "iu": "Barangay", "par": false, "rp": "Issue raised in inter-agency meeting", "tpm": ["Needs improvement", "Needs improvement", "Partly complete", 55, "About half the length built; crack at one joint noted (not an engineering finding)."], "lat": 16.46104, "lng": 120.59483}, {"id": "CAR-HS-2022-005", "reg": "CAR", "lgu": "Lungsod ng Bayanihan", "brgy": "Brgy. Centro", "yr": 2022, "prog": "LGSF-CMGP", "type": "Health station", "title": "Construction of barangay health station in Brgy. Centro", "cost": 5200000, "status": "Completed", "phys": 100, "fin": 92, "days": 60, "photos": 6, "ben": 2400, "iu": "Municipal LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Station open; equipment partly delivered."], "lat": 16.46921, "lng": 120.56814}, {"id": "CAR-SB-2026-006", "reg": "CAR", "lgu": "Lungsod ng Matiwasay", "brgy": "Brgy. Lunsod", "yr": 2026, "prog": "LGSF-SBDP", "type": "School building", "title": "Construction of two-classroom school building in Brgy. Lunsod", "cost": 3800000, "status": "Not Yet Started", "phys": 0, "fin": 0, "days": 8, "photos": 0, "ben": 7800, "iu": "Barangay", "par": false, "rp": "On track", "tpm": null, "lat": 16.40837, "lng": 120.53653}, {"id": "R01-SL-2024-007", "reg": "Region 1", "lgu": "Lungsod ng Maunlad", "brgy": "Brgy. Kanluran", "yr": 2024, "prog": "LGSF-FALGU", "type": "Streetlights", "title": "Installation of solar streetlights in Brgy. Kanluran", "cost": 2800000, "status": "Completed", "phys": 100, "fin": 95, "days": 130, "photos": 6, "ben": 7800, "iu": "Barangay", "par": false, "rp": "On track", "tpm": null, "lat": 16.63332, "lng": 120.25457}, {"id": "R01-MP-2025-008", "reg": "Region 1", "lgu": "Lungsod ng Payapa", "brgy": "Brgy. Sto.Niño", "yr": 2025, "prog": "LGSF-SAFPB", "type": "Multi-purpose building", "title": "Construction of multi-purpose building in Brgy. Sto.Niño", "cost": 7700000, "status": "On-going", "phys": 30, "fin": 18, "days": 14, "photos": 4, "ben": 350, "iu": "City LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Works ongoing", 30, "Hall used for barangay assemblies."], "lat": 16.56936, "lng": 120.27761}, {"id": "R01-RD-2025-009", "reg": "Region 1", "lgu": "Bayan ng Sinag", "brgy": "Brgy. Kanluran", "yr": 2025, "prog": "LGSF-FALGU", "type": "Road", "title": "Concreting of local road in Brgy. Kanluran", "cost": 4300000, "status": "On-going", "phys": 30, "fin": 22, "days": 200, "photos": 3, "ben": 7800, "iu": "Provincial LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Works ongoing", 30, "Road passable; shoulders and drainage present."], "lat": 16.57964, "lng": 120.30726}, {"id": "R02-EC-2024-010", "reg": "Region 2", "lgu": "Lungsod ng Tanglaw", "brgy": "Brgy. Malaya", "yr": 2024, "prog": "LGSF-GEF", "type": "Evacuation center", "title": "Construction of evacuation center in Brgy. Malaya", "cost": 6200000, "status": "Completed", "phys": 100, "fin": 97, "days": 25, "photos": 7, "ben": 1200, "iu": "Barangay", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Used during the last typhoon."], "lat": 17.60832, "lng": 121.645}, {"id": "R02-WS-2024-011", "reg": "Region 2", "lgu": "Bayan ng Dalisay", "brgy": "Brgy. Mabini", "yr": 2024, "prog": "LGSF-GEF", "type": "Water system", "title": "Construction of Level II water system in Brgy. Mabini", "cost": 11300000, "status": "On-going", "phys": 20, "fin": 10, "days": 210, "photos": 0, "ben": 2400, "iu": "Provincial LGU", "par": true, "rp": "No report", "tpm": null, "lat": 17.60474, "lng": 121.70458}, {"id": "R02-FC-2025-012", "reg": "Region 2", "lgu": "Bayan ng Pag-asa", "brgy": "Brgy. Ilaya", "yr": 2025, "prog": "LGSF-FALGU", "type": "Flood control", "title": "Construction of drainage canal and flood wall in Brgy. Ilaya", "cost": 8000000, "status": "Completed", "phys": 100, "fin": 88, "days": 8, "photos": 0, "ben": 350, "iu": "Barangay", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Canal and wall in place."], "lat": 17.62528, "lng": 121.7301}, {"id": "R03-HS-2022-013", "reg": "Region 3", "lgu": "Lungsod ng Mabunga", "brgy": "Brgy. San Roque", "yr": 2022, "prog": "LGSF-SBDP", "type": "Health station", "title": "Construction of barangay health station in Brgy. San Roque", "cost": 5500000, "status": "Completed", "phys": 100, "fin": 95, "days": 60, "photos": 4, "ben": 350, "iu": "Provincial LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Station open; equipment partly delivered."], "lat": 15.02828, "lng": 120.63259}, {"id": "R03-SB-2025-014", "reg": "Region 3", "lgu": "Lungsod ng Masigla", "brgy": "Brgy. Malaya", "yr": 2025, "prog": "LGSF-FALGU", "type": "School building", "title": "Construction of two-classroom school building in Brgy. Malaya", "cost": 4600000, "status": "On-going", "phys": 45, "fin": 37, "days": 21, "photos": 5, "ben": 350, "iu": "Barangay", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Works ongoing", 45, "Classrooms in use."], "lat": 15.09516, "lng": 120.646}, {"id": "R03-SL-2023-015", "reg": "Region 3", "lgu": "Bayan ng Tagumpay", "brgy": "Brgy. Baybay", "yr": 2023, "prog": "LGSF-FALGU", "type": "Streetlights", "title": "Installation of solar streetlights in Brgy. Baybay", "cost": 3300000, "status": "Completed", "phys": 100, "fin": 95, "days": 200, "photos": 3, "ben": 600, "iu": "Barangay", "par": false, "rp": "On track", "tpm": null, "lat": 14.99004, "lng": 120.66846}, {"id": "R4A-MP-2022-016", "reg": "Region 4A", "lgu": "Bayan ng Mapalad", "brgy": "Brgy. San Roque", "yr": 2022, "prog": "LGSF-CMGP", "type": "Multi-purpose building", "title": "Construction of multi-purpose building in Brgy. San Roque", "cost": 8400000, "status": "Completed", "phys": 100, "fin": 88, "days": 130, "photos": 3, "ben": 7800, "iu": "Barangay", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Hall used for barangay assemblies."], "lat": 14.03195, "lng": 121.08}, {"id": "R4A-RD-2022-017", "reg": "Region 4A", "lgu": "Bayan ng Marikit", "brgy": "Brgy. Sto.Niño", "yr": 2022, "prog": "LGSF-CMGP", "type": "Road", "title": "Concreting of local road in Brgy. Sto.Niño", "cost": 21400000, "status": "On-going", "phys": 45, "fin": 40, "days": 14, "photos": 2, "ben": 350, "iu": "City LGU", "par": false, "rp": "On track", "tpm": null, "lat": 14.05628, "lng": 121.1094}, {"id": "R4A-EC-2025-018", "reg": "Region 4A", "lgu": "Bayan ng Malaya", "brgy": "Brgy. Sto.Niño", "yr": 2025, "prog": "LGSF-FALGU", "type": "Evacuation center", "title": "Construction of evacuation center in Brgy. Sto.Niño", "cost": 12200000, "status": "Completed", "phys": 100, "fin": 100, "days": 95, "photos": 7, "ben": 7800, "iu": "City LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Building in use; toilets functional."], "lat": 14.09683, "lng": 121.18718}, {"id": "R4B-WS-2025-019", "reg": "MIMAROPA", "lgu": "Bayan ng Matatag", "brgy": "Brgy. San Roque", "yr": 2025, "prog": "LGSF-FALGU", "type": "Water system", "title": "Construction of Level II water system in Brgy. San Roque", "cost": 4000000, "status": "Not Yet Started", "phys": 0, "fin": 0, "days": 14, "photos": 0, "ben": 7800, "iu": "Municipal LGU", "par": false, "rp": "On track", "tpm": null, "lat": 12.97108, "lng": 121.34955}, {"id": "R4B-FC-2023-020", "reg": "MIMAROPA", "lgu": "Bayan ng Masipag", "brgy": "Brgy. Malaya", "yr": 2023, "prog": "LGSF-FALGU", "type": "Flood control", "title": "Construction of drainage canal and flood wall in Brgy. Malaya", "cost": 20900000, "status": "Completed", "phys": 100, "fin": 92, "days": 60, "photos": 2, "ben": 4100, "iu": "Municipal LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Canal and wall in place."], "lat": 12.83101, "lng": 121.40714}, {"id": "R4B-HS-2026-021", "reg": "MIMAROPA", "lgu": "Bayan ng Magiting", "brgy": "Brgy. Ilaya", "yr": 2026, "prog": "LGSF-GEF", "type": "Health station", "title": "Construction of barangay health station in Brgy. Ilaya", "cost": 3700000, "status": "On-going", "phys": 45, "fin": 43, "days": 45, "photos": 5, "ben": 600, "iu": "Provincial LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Works ongoing", 45, "Station open; equipment partly delivered."], "lat": 12.87492, "lng": 121.43899}, {"id": "R05-SB-2023-022", "reg": "Region 5", "lgu": "Bayan ng Maligaya", "brgy": "Brgy. Sto.Niño", "yr": 2023, "prog": "LGSF-FALGU", "type": "School building", "title": "Construction of two-classroom school building in Brgy. Sto.Niño", "cost": 7600000, "status": "Completed", "phys": 100, "fin": 88, "days": 95, "photos": 7, "ben": 4100, "iu": "Municipal LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Classrooms in use."], "lat": 13.09981, "lng": 123.67534}, {"id": "R05-SL-2025-023", "reg": "Region 5", "lgu": "Lungsod ng Mahinahon", "brgy": "Brgy. Malaya", "yr": 2025, "prog": "LGSF-GEF", "type": "Streetlights", "title": "Installation of solar streetlights in Brgy. Malaya", "cost": 2800000, "status": "On-going", "phys": 85, "fin": 85, "days": 200, "photos": 0, "ben": 1200, "iu": "Provincial LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Works ongoing", 85, "Lights working at night."], "lat": 13.15443, "lng": 123.75699}, {"id": "R05-MP-2023-024", "reg": "Region 5", "lgu": "Lungsod ng Matapat", "brgy": "Brgy. Bukid", "yr": 2023, "prog": "LGSF-FALGU", "type": "Multi-purpose building", "title": "Construction of multi-purpose building in Brgy. Bukid", "cost": 4000000, "status": "Completed", "phys": 100, "fin": 92, "days": 200, "photos": 0, "ben": 12500, "iu": "Barangay", "par": false, "rp": "On track", "tpm": null, "lat": 13.08706, "lng": 123.78832}, {"id": "R06-RD-2022-025", "reg": "Region 6", "lgu": "Bayan ng Mayumi", "brgy": "Brgy. Kanluran", "yr": 2022, "prog": "LGSF-CMGP", "type": "Road", "title": "Concreting of local road in Brgy. Kanluran", "cost": 21400000, "status": "Completed", "phys": 100, "fin": 88, "days": 30, "photos": 6, "ben": 4100, "iu": "Barangay", "par": false, "rp": "On track", "tpm": null, "lat": 10.78374, "lng": 122.61524}, {"id": "R06-EC-2022-026", "reg": "Region 6", "lgu": "Bayan ng Marangal", "brgy": "Brgy. Malaya", "yr": 2022, "prog": "LGSF-CMGP", "type": "Evacuation center", "title": "Construction of evacuation center in Brgy. Malaya", "cost": 17600000, "status": "Completed", "phys": 100, "fin": 95, "days": 14, "photos": 6, "ben": 600, "iu": "Barangay", "par": false, "rp": "On track", "tpm": null, "lat": 10.67859, "lng": 122.54949}, {"id": "R06-WS-2023-027", "reg": "Region 6", "lgu": "Lungsod ng Masinop", "brgy": "Brgy. Sto.Niño", "yr": 2023, "prog": "LGSF-GEF", "type": "Water system", "title": "Construction of Level II water system in Brgy. Sto.Niño", "cost": 14300000, "status": "On-going", "phys": 60, "fin": 58, "days": 14, "photos": 4, "ben": 2400, "iu": "City LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Works ongoing", 60, "Tank and tap stands working."], "lat": 10.74419, "lng": 122.51053}, {"id": "R07-FC-2023-028", "reg": "Region 7", "lgu": "Bayan ng Matiyaga", "brgy": "Brgy. San Roque", "yr": 2023, "prog": "LGSF-SBDP", "type": "Flood control", "title": "Construction of drainage canal and flood wall in Brgy. San Roque", "cost": 24900000, "status": "Completed", "phys": 100, "fin": 95, "days": 14, "photos": 6, "ben": 1200, "iu": "Provincial LGU", "par": false, "rp": "On track", "tpm": null, "lat": 10.31779, "lng": 123.8196}, {"id": "R07-HS-2022-029", "reg": "Region 7", "lgu": "Bayan ng Malusog", "brgy": "Brgy. Baybay", "yr": 2022, "prog": "LGSF-SBDP", "type": "Health station", "title": "Construction of barangay health station in Brgy. Baybay", "cost": 3300000, "status": "Completed", "phys": 100, "fin": 98, "days": 14, "photos": 0, "ben": 1200, "iu": "City LGU", "par": false, "rp": "On track", "tpm": null, "lat": 10.36851, "lng": 123.85658}, {"id": "R07-SB-2024-030", "reg": "Region 7", "lgu": "Bayan ng Masaya", "brgy": "Brgy. Bukid", "yr": 2024, "prog": "LGSF-GEF", "type": "School building", "title": "Construction of two-classroom school building in Brgy. Bukid", "cost": 7100000, "status": "Completed", "phys": 100, "fin": 88, "days": 130, "photos": 6, "ben": 1200, "iu": "City LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Classrooms in use."], "lat": 10.24622, "lng": 123.82985}, {"id": "R08-SL-2025-031", "reg": "Region 8", "lgu": "Bayan ng Sagana", "brgy": "Brgy. Poblacion", "yr": 2025, "prog": "LGSF-SBDP", "type": "Streetlights", "title": "Installation of solar streetlights in Brgy. Poblacion", "cost": 1800000, "status": "Not Yet Started", "phys": 0, "fin": 0, "days": 14, "photos": 0, "ben": 4100, "iu": "Municipal LGU", "par": false, "rp": "On track", "tpm": null, "lat": 11.17753, "lng": 125.05235}, {"id": "R08-MP-2025-032", "reg": "Region 8", "lgu": "Bayan ng Ligaya", "brgy": "Brgy. Pag asa", "yr": 2025, "prog": "LGSF-FALGU", "type": "Multi-purpose building", "title": "Construction of multi-purpose building in Brgy. Pag asa", "cost": 4700000, "status": "On-going", "phys": 30, "fin": 30, "days": 200, "photos": 6, "ben": 600, "iu": "Barangay", "par": false, "rp": "On track", "tpm": null, "lat": 11.30763, "lng": 125.06439}, {"id": "R08-RD-2022-033", "reg": "Region 8", "lgu": "Bayan ng Himig", "brgy": "Brgy. Baybay", "yr": 2022, "prog": "LGSF-CMGP", "type": "Road", "title": "Concreting of local road in Brgy. Baybay", "cost": 28100000, "status": "Completed", "phys": 100, "fin": 92, "days": 200, "photos": 6, "ben": 600, "iu": "Barangay", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Road passable; shoulders and drainage present."], "lat": 11.28377, "lng": 124.96628}, {"id": "R09-EC-2022-034", "reg": "Region 9", "lgu": "Bayan ng Bituin", "brgy": "Brgy. Ilaya", "yr": 2022, "prog": "LGSF-FALGU", "type": "Evacuation center", "title": "Construction of evacuation center in Brgy. Ilaya", "cost": 5300000, "status": "Completed", "phys": 100, "fin": 92, "days": 14, "photos": 6, "ben": 12500, "iu": "Provincial LGU", "par": false, "rp": "On track", "tpm": null, "lat": 7.85256, "lng": 123.46184}, {"id": "R09-WS-2026-035", "reg": "Region 9", "lgu": "Bayan ng Amihan", "brgy": "Brgy. Centro", "yr": 2026, "prog": "LGSF-SAFPB", "type": "Water system", "title": "Construction of Level II water system in Brgy. Centro", "cost": 11300000, "status": "Not Yet Started", "phys": 0, "fin": 0, "days": 21, "photos": 0, "ben": 2400, "iu": "City LGU", "par": false, "rp": "On track", "tpm": null, "lat": 7.89946, "lng": 123.51121}, {"id": "R09-FC-2022-036", "reg": "Region 9", "lgu": "Bayan ng Habagat", "brgy": "Brgy. Bukid", "yr": 2022, "prog": "LGSF-SBDP", "type": "Flood control", "title": "Construction of drainage canal and flood wall in Brgy. Bukid", "cost": 17100000, "status": "Completed", "phys": 100, "fin": 92, "days": 200, "photos": 6, "ben": 1200, "iu": "Municipal LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Canal and wall in place."], "lat": 7.85777, "lng": 123.45437}, {"id": "R10-HS-2025-037", "reg": "Region 10", "lgu": "Lungsod ng Batis", "brgy": "Brgy. Kanluran", "yr": 2025, "prog": "LGSF-GEF", "type": "Health station", "title": "Construction of barangay health station in Brgy. Kanluran", "cost": 2600000, "status": "On-going", "phys": 45, "fin": 33, "days": 60, "photos": 2, "ben": 350, "iu": "Barangay", "par": false, "rp": "On track", "tpm": null, "lat": 8.45255, "lng": 124.71787}, {"id": "R10-SB-2023-038", "reg": "Region 10", "lgu": "Bayan ng Lambak", "brgy": "Brgy. Rizal", "yr": 2023, "prog": "LGSF-FALGU", "type": "School building", "title": "Construction of two-classroom school building in Brgy. Rizal", "cost": 4700000, "status": "Completed", "phys": 100, "fin": 98, "days": 30, "photos": 5, "ben": 12500, "iu": "Municipal LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Classrooms in use."], "lat": 8.44601, "lng": 124.57785}, {"id": "R10-SL-2023-039", "reg": "Region 10", "lgu": "Lungsod ng Talampas", "brgy": "Brgy. San Roque", "yr": 2023, "prog": "LGSF-SBDP", "type": "Streetlights", "title": "Installation of solar streetlights in Brgy. San Roque", "cost": 2800000, "status": "Completed", "phys": 100, "fin": 98, "days": 14, "photos": 5, "ben": 4100, "iu": "Provincial LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Lights working at night."], "lat": 8.43031, "lng": 124.70148}, {"id": "R11-MP-2024-040", "reg": "Region 11", "lgu": "Lungsod ng Bukal", "brgy": "Brgy. Malaya", "yr": 2024, "prog": "LGSF-FALGU", "type": "Multi-purpose building", "title": "Construction of multi-purpose building in Brgy. Malaya", "cost": 3200000, "status": "On-going", "phys": 75, "fin": 67, "days": 200, "photos": 2, "ben": 4100, "iu": "Municipal LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Works ongoing", 75, "Hall used for barangay assemblies."], "lat": 7.07987, "lng": 125.64673}, {"id": "R11-RD-2022-041", "reg": "Region 11", "lgu": "Bayan ng Hiraya", "brgy": "Brgy. Sto.Niño", "yr": 2022, "prog": "LGSF-CMGP", "type": "Road", "title": "Concreting of local road in Brgy. Sto.Niño", "cost": 3200000, "status": "Completed", "phys": 100, "fin": 92, "days": 200, "photos": 0, "ben": 7800, "iu": "City LGU", "par": false, "rp": "On track", "tpm": null, "lat": 7.07453, "lng": 125.54011}, {"id": "R11-EC-2025-042", "reg": "Region 11", "lgu": "Bayan ng Dakila", "brgy": "Brgy. Rizal", "yr": 2025, "prog": "LGSF-SAFPB", "type": "Evacuation center", "title": "Construction of evacuation center in Brgy. Rizal", "cost": 5000000, "status": "Not Yet Started", "phys": 0, "fin": 0, "days": 200, "photos": 0, "ben": 350, "iu": "Provincial LGU", "par": false, "rp": "On track", "tpm": null, "lat": 7.00745, "lng": 125.63314}, {"id": "R12-WS-2024-043", "reg": "Region 12", "lgu": "Bayan ng Tala", "brgy": "Brgy. Centro", "yr": 2024, "prog": "LGSF-SBDP", "type": "Water system", "title": "Construction of Level II water system in Brgy. Centro", "cost": 13200000, "status": "Completed", "phys": 100, "fin": 92, "days": 130, "photos": 7, "ben": 2400, "iu": "Barangay", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Tank and tap stands working."], "lat": 6.55917, "lng": 124.78859}, {"id": "R12-FC-2022-044", "reg": "Region 12", "lgu": "Bayan ng Alon", "brgy": "Brgy. Malaya", "yr": 2022, "prog": "LGSF-CMGP", "type": "Flood control", "title": "Construction of drainage canal and flood wall in Brgy. Malaya", "cost": 5600000, "status": "Completed", "phys": 100, "fin": 95, "days": 21, "photos": 0, "ben": 2400, "iu": "Municipal LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Canal and wall in place."], "lat": 6.46667, "lng": 124.78626}, {"id": "R12-HS-2024-045", "reg": "Region 12", "lgu": "Bayan ng Sampaguita", "brgy": "Brgy. Baybay", "yr": 2024, "prog": "LGSF-FALGU", "type": "Health station", "title": "Construction of barangay health station in Brgy. Baybay", "cost": 3200000, "status": "Completed", "phys": 100, "fin": 100, "days": 200, "photos": 2, "ben": 1200, "iu": "Municipal LGU", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Station open; equipment partly delivered."], "lat": 6.56288, "lng": 124.91936}, {"id": "R13-SB-2024-046", "reg": "CARAGA", "lgu": "Bayan ng Kalayaan", "brgy": "Brgy. Kanluran", "yr": 2024, "prog": "LGSF-FALGU", "type": "School building", "title": "Construction of two-classroom school building in Brgy. Kanluran", "cost": 3400000, "status": "Completed", "phys": 100, "fin": 98, "days": 14, "photos": 5, "ben": 350, "iu": "Barangay", "par": false, "rp": "On track", "tpm": ["Satisfactory", "Satisfactory", "Observed complete", 100, "Classrooms in use."], "lat": 8.95347, "lng": 125.48772}, {"id": "R13-SL-2023-047", "reg": "CARAGA", "lgu": "Lungsod ng Luntian", "brgy": "Brgy. Sto.Niño", "yr": 2023, "prog": "LGSF-SAFPB", "type": "Streetlights", "title": "Installation of solar streetlights in Brgy. Sto.Niño", "cost": 3700000, "status": "On-going", "phys": 60, "fin": 52, "days": 8, "photos": 2, "ben": 350, "iu": "Provincial LGU", "par": false, "rp": "On track", "tpm": null, "lat": 8.97617, "lng": 125.60566}, {"id": "R13-MP-2024-048", "reg": "CARAGA", "lgu": "Bayan ng Bagwis", "brgy": "Brgy. San Roque", "yr": 2024, "prog": "LGSF-GEF", "type": "Multi-purpose building", "title": "Construction of multi-purpose building in Brgy. San Roque", "cost": 5300000, "status": "On-going", "phys": 15, "fin": 10, "days": 60, "photos": 7, "ben": 2400, "iu": "Municipal LGU", "par": false, "rp": "On track", "tpm": null, "lat": 9.01146, "lng": 125.48456}];
+  var OLD={"SYN-2025-003": "NCR-EC-2024-002", "SYN-2025-002": "NCR-WS-2026-003", "SYN-2025-009": "R02-WS-2024-011", "SYN-2025-010": "R02-EC-2024-010", "SYN-2025-001": "NCR-EC-2024-002"};
+  function fixId(x){return String(x).replace(/SYN-2025-\d{3}/g,function(m){return OLD[m]||m;});}
+  function evidence(p){
+    if(!p.tpm)return{k:"u",t:"Insufficient Evidence",why:"No independent validation yet."};
+    var g=p.phys-p.tpm[3];
+    if(g>=50)return{k:"i",t:"Inconsistent",why:"Reported "+p.phys+"% vs observed "+p.tpm[3]+"%."};
+    if(g>=15)return{k:"p",t:"Partially Consistent",why:"Reported "+p.phys+"% vs observed "+p.tpm[3]+"%."};
+    if(p.tpm[0]!=="Satisfactory"||p.tpm[1]!=="Satisfactory")return{k:"p",t:"Partially Consistent",why:"Progress matches; process or governance needs improvement."};
+    return{k:"c",t:"Consistent",why:"Reported and observed progress match."};
+  }
+  function priority(p,e){var s=0;if(e.k==="i")s+=3;if(e.k==="p")s+=1;if(e.k==="u"&&p.status!=="Not Yet Started")s+=1;if(p.days>90)s+=1;if(p.photos===0&&p.phys>0)s+=1;if(p.cost>=10000000&&e.k!=="c")s+=1;if(p.rp==="No report")s+=1;if(p.status==="Not Yet Started"&&p.yr<=2024)s+=1;return s>=3?["h","High"]:s>=1?["m","Medium"]:["l","Low"];}
+  P.forEach(function(p){p.ev=evidence(p);p.pr=priority(p,p.ev);});
+  var TRK=Object.keys(OLD).map(function(k){return OLD[k];});
+  var TR=P.filter(function(p){return TRK.indexOf(p.id)>-1||(p.tpm&&(p.tpm[0]!=="Satisfactory"||p.tpm[1]!=="Satisfactory"));});
+  TR.forEach(function(p){p.train=true;p.mun=p.lgu;p.prov="";});
+  var PJ=window.PJ||{cols:[],dict:{},rows:[]};
+  function dec(J,fund){return (J&&J.rows||[]).map(function(r){var o={fund:fund};J.cols.forEach(function(c,i){o[c]=J.dict[c]?J.dict[c][r[i]]:r[i];});o.lgu=o.mun||o.prov||"";if(o.title&&!/[a-z]/.test(o.title)){o.title=o.title.toLowerCase().replace(/(^|[.!?]\s+)([a-z])/g,function(m,a,b){return a+b.toUpperCase();});}o.par=false;o.rp=null;o.tpm=null;o.fin=null;o.days=null;o.photos=null;return o;});}
+  var R=dec(PJ,"LGSF").concat(dec(window.PJ2,"20% DF")),RA=R,FUND=store("us4-fund")||"all";
+  function progL(p){return p.fund==="20% DF"?"20% DF (LIME-20)":"LGSF-"+String(p.prog).replace(/^LGSF-/,"");}
+  var IDX={};R.forEach(function(p){IDX[p.id]=p;});TR.forEach(function(p){IDX[p.id]=p;});
+  /* ---------- TPM 2026 reports (Drive: RO final submissions) ---------- */
+  var TP=window.TPM||{status:{},reg:{},lgu:{},cover:{}};
+  function nk(x){return String(x||"").toLowerCase().replace(/\bcity of\b|\bcity\b/g,"").replace(/[^a-z]/g,"");}
+  var GEN={"farm-to-market":1,"multi-purpose":1,"new":1};
+  function tpmOf(p){var o={st:TP.status[p.reg]||"none",reg:TP.reg[p.reg]||null,lgu:TP.lgu[p.reg+"|"+nk(p.mun)]||null,cov:TP.cover[p.reg+"|"+nk(p.mun)]||(!p.mun&&/camiguin/i.test(p.prov||"")?TP.cover[p.reg+"|@camiguin"]:0)};
+    if(o.lgu&&p.status==="Completed"){var h=((p.brgy||"")+" "+(p.title||"")).toLowerCase();o.hit=o.lgu.tok.some(function(t){return !GEN[t]&&h.indexOf(t)>-1;});}
+    return o;}
+  R.forEach(function(p){var o=tpmOf(p);p.tpmHit=!!o.hit;p.tpmL=o.lgu;});
+  /* ---------- SubayBAYAN exports (geotag counts) + LIME-20 / RPMES forms ---------- */
+  var EXT=window.EXT||{},GST=["Before","Billboard","20–40%","50–70%","90%","Completed","In operation"];
+  R.forEach(function(p){var x=EXT[p.id]||(p.fund==="20% DF"?{g:[0,0,0,0,0,0,0]}:null);if(x&&!x.g&&p.fund==="20% DF")x.g=[0,0,0,0,0,0,0];if(x){p.g=x.g||null;p.rx=x.rp||null;p.ic=x.ic||null;if(p.g)p.photos=p.g.reduce(function(a,b){return a+b;},0);}
+    p.noComp=p.status==="Completed"&&!!p.g&&p.g[5]===0&&p.g[6]===0;});
+  var TPST={ok:"Terminal report received",big:"Terminal report received",part:"Partial upload; no terminal report yet",none:"Not yet submitted"};
+  function byId(id){return IDX[id];}
+  var ORDER=["NCR","CAR","Region 1","Region 2","Region 3","Region 4A","MIMAROPA","Region 5","Region 6","NIR","Region 7","Region 8","Region 9","Region 10","Region 11","Region 12","CARAGA","BARMM"];
+  var REGS=ORDER.filter(function(r){return (PJ.dict.reg||[]).indexOf(r)>-1;});
+  function realEval(p){
+    var tk=T.filter(function(t){return t.id===p.id;}),neg=tk.some(function(t){return t.obs.some(function(o){return /stopped|Not what|Can't find|Quality/.test(o);});}),pos=tk.some(function(t){return t.obs.indexOf("Looks complete and in use")>-1;});
+    var mism=(p.status==="Completed"&&p.phys<100)||(p.phys>=100&&p.status!=="Completed"&&p.status!=="Cancelled"&&p.status!=="Terminated");
+    var e;
+    if(neg&&(p.status==="Completed"||p.phys>=90))e={k:"i",t:"Inconsistent",why:"Record says "+p.status.toLowerCase()+" ("+p.phys+"%), but a citizen reported a problem on site (unverified)."};
+    else if(p.status==="Completed"&&p.rx&&p.rx.act!=null&&p.rx.act<90)e={k:"i",t:"Inconsistent",why:"SubayBAYAN says completed, but the latest RPMES report"+(p.rx.mo?" ("+p.rx.mo+")":"")+" shows "+p.rx.act+"% actual accomplishment."};
+    else if(mism)e={k:"p",t:"Partially Consistent",why:"Status ("+p.status+") and reported accomplishment ("+p.phys+"%) do not match."};
+    else if(p.status==="Completed"&&p.rx&&p.rx.risk==="High Risk")e={k:"p",t:"Partially Consistent",why:"SubayBAYAN says completed, but the latest RPMES report still rates it High Risk."};
+    else if(p.tpmHit)e=p.tpmL.res>=3?{k:"c",t:"Consistent",why:"Record says complete, and this is likely one of the projects the TPM 2026 monitors visited ("+p.tpmL.name+" Result rating "+p.tpmL.res.toFixed(2)+"/4)."}:{k:"p",t:"Partially Consistent",why:"Likely monitored in TPM 2026, but "+p.tpmL.name+"'s Result rating is "+p.tpmL.res.toFixed(2)+"/4, below 3: beneficiaries report gaps."};
+    else if(p.status==="Completed"&&p.rx&&(p.rx.coc||p.rx.act>=100)&&!p.noComp)e={k:"c",t:"Consistent",why:"SubayBAYAN and the RPMES report agree the project is complete"+(p.rx.coc?" (certificate of completion "+p.rx.coc+")":"")+", with geotagged photos on file."};
+    else if(pos&&p.status==="Completed")e={k:"c",t:"Consistent",why:"Record and a citizen observation both say complete."};
+    else if(p.noComp)e={k:"u",t:"Insufficient Evidence",why:"Marked completed, but SubayBAYAN has no geotagged photo at completion or in operation."};
+    else e={k:"u",t:"Insufficient Evidence",why:"Only the project record is available; no independent validation in this dataset."};
+    var sc=0;if(e.k==="i")sc+=3;if(e.k==="p")sc+=1;
+    if(p.status==="Not Yet Started"&&p.yr&&p.yr<=2024)sc+=2;
+    if(p.status==="On-going"&&p.yr&&p.yr<=2023)sc+=1;
+    if(p.cost>=20000000&&p.status!=="Completed"&&p.status!=="Cancelled")sc+=1;
+    sc+=Math.min(2,tk.filter(function(t){return t.st!=="Resolved";}).length);
+    if(p.rx){if(p.rx.risk==="High Risk")sc+=2;if(p.rx.slip>=10)sc+=1;if(p.rx.exc&&p.rx.exc.st!=="Resolved")sc+=1;}
+    if(p.noComp)sc+=1;
+    if(p.status==="Cancelled"||p.status==="Terminated")sc=0;
+    p.ev=e;p.sc=sc;p.pr=sc>=3?["h","High"]:sc>=1?["m","Medium"]:["l","Low"];
+  }
+  var T=store("us4-t")||[
+    {no:"US-7Q2K",id:"SYN-2025-003",obs:["Can't find it at the site"],d:"Went to the site near the chapel; only an empty lot.",st:"Under validation",t:"2026-10-28"},
+    {no:"US-4M8P",id:"SYN-2025-002",obs:["Work has stopped"],d:"No water yet in our purok.",st:"Received",t:"2026-11-02"},
+    {no:"US-2H6V",id:null,reg:"NCR",loc:"Lungsod ng Masagana, Brgy. Ilaya",obs:["Can't find it at the site"],d:"A water project is on the signboard but nothing was built.",st:"Received",t:"2026-11-05"},
+    {no:"US-9C1D",id:"SYN-2025-010",obs:["Looks complete and in use"],d:"We stayed here during the typhoon.",st:"Resolved",t:"2026-10-15"}
+  ];
+  T.forEach(function(t){if(t.id)t.id=fixId(t.id);});
+  var DEC=store("us4-d")||{},DECN=store("us4-dn")||{};
+  function saveT(){store("us4-t",T);if(typeof recompute==="function")recompute();} function saveD(){store("us4-d",DEC);}
+  function tickets(id){return T.filter(function(t){return t.id===id;});}
+  function tReg(t){return t.id&&byId(t.id)?byId(t.id).reg:t.reg;}
+  function recompute(){R.forEach(realEval);}
+  recompute();
+
+  /* ---------- roles & nav ---------- */
+  var NAV={pub:[["search","Search projects"]],ro:[["roqueue","Regional M&E"],["roreview","Review a project"],["rofeedback","Citizen feedback"]],co:[["codash","Dashboard"],["coreport","National Report"],["cotests","Quality checks"],["coabout","About"]]};
+  var RNAME={pub:"Public",ro:"DILG Regional Office",co:"DILG Central Office"};
+  var role=store("us2-role")||"pub";if(!NAV[role])role="pub";
+  $("role").value=role;
+  function views(){return NAV[role].map(function(n){return n[0];});}
+  function drawNav(){var nw=T.filter(function(t){return t.st==="Received"&&tReg(t)===roReg;}).length;
+    $("nav").innerHTML=NAV[role].map(function(n){return '<a href="#'+n[0]+'">'+n[1]+(n[0]==="rofeedback"&&nw?' <span class="badge">'+nw+' new</span>':'')+'</a>';}).join("");
+    var h=(location.hash||"").slice(1);document.querySelectorAll("#nav a").forEach(function(a){if(a.getAttribute("href")==="#"+h)a.setAttribute("aria-current","page");});}
+  $("role").addEventListener("change",function(){role=this.value;store("us2-role",role);drawNav();location.hash=NAV[role][0][0];route();});
+  function route(){
+    var h=(location.hash||"").slice(1);setTimeout(function(){},0);
+    var owner=null;Object.keys(NAV).forEach(function(r){NAV[r].forEach(function(n){if(n[0]===h)owner=r;});});
+    if(owner&&owner!==role){role=owner;$("role").value=role;store("us2-role",role);drawNav();}
+    applyFund();document.body.classList.toggle("co-bg",role==="co");document.body.classList.toggle("ro-bg",role==="ro");document.body.classList.toggle("pub-bg",role==="pub");
+    if(views().indexOf(h)<0)h=views()[0];
+    document.querySelectorAll("section.view").forEach(function(s){s.classList.toggle("on",s.id==="v-"+h);});
+    document.querySelectorAll("#nav a").forEach(function(a){if(a.getAttribute("href")==="#"+h)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
+    var lbl=NAV[role].filter(function(n){return n[0]===h;})[0][1];
+    $("crumb").innerHTML='Workspace / '+RNAME[role]+' / <b>'+lbl+'</b>';
+    if(h==="roqueue")drawQueue(); if(h==="rofeedback")drawInbox(); if(h==="codash")drawCO(); if(h==="coreport"){recompute();drawReport();}
+  }
+  /* ---------- Evidence report (CO) ---------- */
+  var RC={navy:"#0B2A6B",blue:"#2F6FD6",gold:"#E8A800",green:"#2E9E5B",red:"#D64545",gray:"#8A99B5",ink:"#1B2540",mut:"#5B6B8C",line:"#D7DEEB"};
+  function xe(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function fmt(n){return Math.round(n).toLocaleString("en-US");}
+  function pct(a,b){return b?Math.round(1000*a/b)/10:0;}
+  function hbar(rows,o){o=o||{};var W=680,lw=150,rh=24,top=o.title?34:8,H=top+rows.length*rh+10,max=o.max||Math.max.apply(null,rows.map(function(r){return r.v;}).concat([1]));
+    var s='<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" font-family="Arial, Helvetica, sans-serif"><rect width="'+W+'" height="'+H+'" fill="#ffffff"/>';
+    if(o.title)s+='<text x="0" y="18" font-size="14" font-weight="700" fill="'+RC.navy+'">'+xe(o.title)+'</text>';
+    rows.forEach(function(r,i){var y=top+i*rh,bw=Math.max(1,(W-lw-90)*r.v/max);
+      s+='<text x="'+(lw-8)+'" y="'+(y+15)+'" font-size="11.5" text-anchor="end" fill="'+RC.ink+'">'+xe(r.l)+'</text><rect x="'+lw+'" y="'+(y+3)+'" width="'+bw.toFixed(1)+'" height="'+(rh-8)+'" rx="3" fill="'+(r.c||o.color||RC.blue)+'"/><text x="'+(lw+bw+6).toFixed(1)+'" y="'+(y+15)+'" font-size="11.5" font-weight="700" fill="'+RC.ink+'">'+xe(o.f?o.f(r.v):fmt(r.v))+'</text>';});
+    return {svg:s+'</svg>',w:W,h:H};}
+  function donut(seg,title){var W=680,H=230,cx=115,cy=118,r=78,sw=34,tot=seg.reduce(function(a,x){return a+x.v;},0)||1,c=2*Math.PI*r,off=0;
+    var s='<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" font-family="Arial, Helvetica, sans-serif"><rect width="'+W+'" height="'+H+'" fill="#ffffff"/><text x="0" y="18" font-size="14" font-weight="700" fill="'+RC.navy+'">'+xe(title)+'</text>';
+    seg.forEach(function(x){if(!x.v)return;var L=c*x.v/tot;s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+x.c+'" stroke-width="'+sw+'" stroke-dasharray="'+L.toFixed(2)+' '+(c-L).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'" transform="rotate(-90 '+cx+' '+cy+')"/>';off+=L;});
+    s+='<text x="'+cx+'" y="'+(cy+2)+'" text-anchor="middle" font-size="22" font-weight="700" fill="'+RC.navy+'">'+fmt(tot)+'</text><text x="'+cx+'" y="'+(cy+20)+'" text-anchor="middle" font-size="11" fill="'+RC.mut+'">projects</text>';
+    seg.forEach(function(x,i){var y=60+i*34;s+='<rect x="250" y="'+(y-12)+'" width="16" height="16" rx="3" fill="'+x.c+'"/><text x="276" y="'+(y+1)+'" font-size="13" fill="'+RC.ink+'">'+xe(x.l)+'</text><text x="560" y="'+(y+1)+'" font-size="13" font-weight="700" text-anchor="end" fill="'+RC.ink+'">'+fmt(x.v)+'</text><text x="640" y="'+(y+1)+'" font-size="12" text-anchor="end" fill="'+RC.mut+'">'+pct(x.v,tot)+'%</text>';});
+    return {svg:s+'</svg>',w:W,h:H};}
+  function tiles(t){var W=680,H=96,n=t.length,cw=(W-(n-1)*10)/n;var s='<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" font-family="Arial, Helvetica, sans-serif"><rect width="'+W+'" height="'+H+'" fill="#ffffff"/>';
+    t.forEach(function(x,i){var X=i*(cw+10);s+='<rect x="'+X+'" y="2" width="'+cw+'" height="'+(H-4)+'" rx="8" fill="'+x.bg+'"/><rect x="'+X+'" y="2" width="6" height="'+(H-4)+'" rx="3" fill="'+x.c+'"/><text x="'+(X+18)+'" y="42" font-size="24" font-weight="700" fill="'+x.c+'">'+xe(x.v)+'</text><text x="'+(X+18)+'" y="64" font-size="11" fill="'+RC.ink+'">'+xe(x.l1)+'</text><text x="'+(X+18)+'" y="80" font-size="11" fill="'+RC.mut+'">'+xe(x.l2||"")+'</text>';});
+    return {svg:s+'</svg>',w:W,h:H};}
+  function whyShort(p){var a=[];if(p.ev&&p.ev.k==="i")a.push("Sources conflict");if(p.rx&&p.rx.risk==="High Risk")a.push("RPMES High Risk");if(p.rx&&p.rx.slip>=10)a.push("Slippage "+p.rx.slip+"%");if(p.rx&&p.rx.exc&&p.rx.exc.st!=="Resolved")a.push("Open exception report");if(p.status==="Not Yet Started"&&p.yr<=2024)a.push("Not started since "+p.yr);if(p.noComp)a.push("No completion photo");if(p.status==="On-going"&&p.yr<=2023)a.push("On-going since "+p.yr);if(!a.length)a.push(p.ev?p.ev.t:"");return a.join("; ");}
+  function buildReport(region){
+    var D=R.filter(function(p){return !region||p.reg===region;}),byReg=!region,gk=function(p){return byReg?p.reg:(p.prov||"(Province not given)");};
+    var groups=byReg?REGS.filter(function(g){return D.some(function(p){return p.reg===g;});}):uniq(D.map(gk)).sort();
+    var G={};groups.forEach(function(g){G[g]={n:0,c:0,o:0,ny:0,x:0,cost:0,nc:0,hi:0,rh:0,sl:0,ex:0,exo:0,late:0,df25:0,df25n:0,inc:0};});
+    var T0={n:0,c:0,o:0,ny:0,x:0,cost:0,nc:0,hi:0,rh:0,sl:0,ex:0,exo:0,late:0,df25:0,df25n:0,inc:0};
+    D.forEach(function(p){var g=G[gk(p)];if(!g)return;[g,T0].forEach(function(a){a.n++;a.cost+=p.cost||0;
+      if(p.status==="Completed")a.c++;else if(p.status==="On-going")a.o++;else if(p.status==="Not Yet Started")a.ny++;else a.x++;
+      if(p.noComp)a.nc++;if(p.pr&&p.pr[0]==="h")a.hi++;if(p.ev&&p.ev.k==="i")a.inc++;
+      if(p.rx){if(p.rx.risk==="High Risk")a.rh++;if(p.rx.slip>=10)a.sl++;if(p.rx.exc){a.ex++;if(p.rx.exc.st!=="Resolved")a.exo++;}}
+      if(p.fund==="LGSF"&&p.status==="Not Yet Started"&&p.yr<=2024)a.late++;
+      if(p.fund==="20% DF"&&p.yr===2025){a.df25++;if(p.status==="Not Yet Started")a.df25n++;}});});
+    var scope=(region||"All regions")+" · "+(FUND==="all"?"LGSF and 20% Development Fund":FUND==="LGSF"?"Local Government Support Fund (LGSF)":"20% Development Fund (LIME-20)");
+    var NOW=new Date(),today=NOW.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}),stamp=today+", "+NOW.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}),ym=NOW.toISOString().slice(0,7),mon=NOW.toLocaleDateString("en-GB",{month:"long",year:"numeric"});
+    function top(k,n){return groups.slice().sort(function(a,b){return G[b][k]-G[a][k];}).filter(function(g){return G[g][k]>0;}).slice(0,n||3);}
+    function lst(a){return a.length<2?a.join(""):a.slice(0,-1).join(", ")+" and "+a[a.length-1];}
+    var unit=byReg?"region":"province";
+    var tpmOk=REGS.filter(function(r){return TP.status[r]==="ok"||TP.status[r]==="big";}),tpmNone=REGS.filter(function(r){return (TP.status[r]||"none")!=="ok"&&TP.status[r]!=="big";});
+    var F=[],Rec=[];
+    F.push("<b>"+fmt(T0.n)+" projects worth ₱"+(T0.cost/1e9).toFixed(1)+" billion</b> are tracked. "+pct(T0.c,T0.n)+"% are completed, "+pct(T0.o,T0.n)+"% on-going and "+pct(T0.ny,T0.n)+"% not yet started.");
+    if(T0.nc)F.push("<b>"+fmt(T0.nc)+" projects marked completed have no geotagged photo at completion or in operation</b> ("+pct(T0.nc,T0.c)+"% of completed projects). Highest in "+lst(top("nc"))+".");
+    if(T0.rh||T0.sl)F.push("The latest RPMES (LIME-20) reports rate <b>"+fmt(T0.rh)+" projects High Risk</b>; "+fmt(T0.sl)+" are 10% or more behind schedule"+(T0.ex?", and "+fmt(T0.ex)+" have exception reports ("+fmt(T0.exo)+" not yet resolved)":"")+".");
+    if(T0.inc)F.push("<b>"+fmt(T0.inc)+" projects show conflicting evidence</b>, for example marked completed in SubayBAYAN while the latest RPMES report shows less than 90% accomplishment.");
+    if(T0.late)F.push("<b>"+fmt(T0.late)+" LGSF projects funded in 2022–2024 have not started.</b> Most are in "+lst(top("late"))+".");
+    if(T0.df25)F.push(pct(T0.df25n,T0.df25)+"% of FY 2025 20% Development Fund projects ("+fmt(T0.df25n)+" of "+fmt(T0.df25)+") are reported as not yet started. Part of this may be late enrolment in LIME-20 rather than actual delay.");
+    if(byReg)F.push("Independent validation is thin: <b>TPM 2026 terminal reports have been received from "+tpmOk.length+" of "+REGS.length+" regions</b>.");
+    if(T0.nc)Rec.push("Direct Regional Offices to validate the "+fmt(T0.nc)+" completed projects without completion photos, starting with "+lst(top("nc"))+", and require geotagged completion photos before a project is tagged Completed.");
+    if(T0.inc||T0.rh)Rec.push("Prioritise site validation of the "+fmt(T0.inc+T0.rh)+" projects with conflicting evidence or High Risk ratings. Section 6 lists the first to review.");
+    if(T0.late)Rec.push("Require catch-up plans, with dates, for the "+fmt(T0.late)+" LGSF projects funded in 2022–2024 that have not started, and decide on reprogramming under existing guidelines where LGUs cannot proceed.");
+    if(T0.df25n)Rec.push("Ask Regional Offices to confirm whether the "+fmt(T0.df25n)+" FY 2025 20% DF projects tagged \u201cnot yet started\u201d are delayed or simply not yet updated in LIME-20.");
+    if(byReg&&tpmNone.length)Rec.push("Set a deadline for TPM 2026 terminal reports from the "+tpmNone.length+" regions yet to submit, and consider directing TPM coverage to the regions with the largest evidence gaps.");
+    var ebr=escByReg(),ebk=Object.keys(ebr).filter(function(r){return !region||r===region;}).sort(function(a,b){return ebr[b]-ebr[a];});
+    if(byReg&&ebk.length&&ebr[ebk[0]]>=3)Rec.push("Review the capacity of "+ebk[0]+", which elevated "+ebr[ebk[0]]+" projects to Central Office, and consider targeted capacity development or technical assistance.");
+    if(T0.exo)Rec.push("Track the "+fmt(T0.exo)+" unresolved exception reports to closure through the Regional Project Monitoring Committees.");
+    var C=[];function ch(o){C.push(o);return C.length-1;}
+    var cK=ch(tiles([{v:fmt(T0.n),l1:"projects tracked",l2:"₱"+(T0.cost/1e9).toFixed(1)+"B total cost",c:RC.navy,bg:"#EEF3FB"},{v:pct(T0.c,T0.n)+"%",l1:"completed",l2:fmt(T0.c)+" projects",c:RC.green,bg:"#EAF6EF"},{v:fmt(T0.hi),l1:"High AI Review",l2:"Priority",c:RC.red,bg:"#FBEDED"},{v:fmt(T0.nc),l1:"completed without",l2:"completion photo",c:RC.gold,bg:"#FDF6E3"}]));
+    var cD=ch(donut([{l:"Completed",v:T0.c,c:RC.green},{l:"On-going",v:T0.o,c:RC.gold},{l:"Not yet started",v:T0.ny,c:RC.gray},{l:"Cancelled, terminated, other",v:T0.x,c:RC.red}],"Physical status"));
+    var cR=ch(hbar(groups.map(function(g){return{l:g,v:pct(G[g].c,G[g].n)};}).sort(function(a,b){return b.v-a.v;}),{title:"Completion rate by "+unit+" (%)",max:100,f:function(v){return v+"%";},color:RC.green}));
+    var cN=T0.nc?ch(hbar(groups.map(function(g){return{l:g,v:G[g].nc};}).filter(function(r){return r.v;}).sort(function(a,b){return b.v-a.v;}).slice(0,18),{title:"Completed projects without a geotagged completion photo",color:RC.gold})):-1;
+    var cH=(T0.rh||T0.sl)?ch(hbar(groups.map(function(g){return{l:g,v:G[g].rh+G[g].sl};}).filter(function(r){return r.v;}).sort(function(a,b){return b.v-a.v;}).slice(0,18),{title:"RPMES: High Risk or slippage of 10% or more",color:RC.red})):-1;
+    var cL=T0.late?ch(hbar(groups.map(function(g){return{l:g,v:G[g].late};}).filter(function(r){return r.v;}).sort(function(a,b){return b.v-a.v;}).slice(0,18),{title:"LGSF projects funded 2022–2024, not yet started",color:RC.gray})):-1;
+    var cT=byReg?ch(hbar(REGS.map(function(r){var st=TP.status[r]||"none";return{l:r,v:st==="ok"?3:st==="big"?3:st==="part"?1.5:0.15,c:st==="ok"||st==="big"?RC.green:st==="part"?RC.gold:RC.line};}),{title:"TPM 2026 terminal reports (green: received · amber: partial · grey: none)",max:3,f:function(v){return v>=3?"Received":v>=1.5?"Partial":"None";}})):-1;
+    var dk={Approved:0,"Returned for revision":0,"Escalated to Central Office":0};Object.keys(DEC).forEach(function(id){if(!region||(IDX[id]&&IDX[id].reg===region))var dv=/^Escalated/.test(DEC[id])?"Escalated to Central Office":DEC[id];dk[dv]=(dk[dv]||0)+1;});
+    var nd=dk.Approved+dk["Returned for revision"]+dk["Escalated to Central Office"];
+    var tks=T.filter(function(t){return !region||tReg(t)===region;});
+    var topP=D.filter(function(p){return p.status!=="Cancelled"&&p.status!=="Terminated";}).sort(function(a,b){return (b.sc||0)-(a.sc||0)||(b.cost||0)-(a.cost||0);}).slice(0,15);
+    var B=[],sec=0;function A(x){B.push(x);}
+    var hd=function(t){A({t:"h",text:(++sec)+". "+t});};
+    A({t:"cover",kicker:"DILG · UGNAY-SUBAY",title:(region?"Regional":"National")+" Monitoring and Evaluation (M&E) Report",sub:["Locally Funded Infrastructure Projects · "+scope,"Reporting period: "+mon+" (as of "+today+")","Generated "+stamp]});
+    A({t:"note",text:"Sources: LGSF database extract (as of "+(PJ.asof||"Nov 2026")+"); SubayBAYAN project exports and LIME-20 / RPMES forms, FY 2022–2026; TPM 2026 terminal reports received from Regional Offices; citizen feedback and reviewer decisions logged in Ugnay-Subay. Prototype output for decision support; findings are reasons to check, not conclusions."});
+    hd("Executive summary");A({t:"fig",i:cK});A({t:"sub",text:"Key findings"});A({t:"ol",items:F});
+    if(Rec.length){A({t:"sub",text:"Decisions requested from management"});A({t:"ol",items:Rec});}
+    A({t:"pb"});hd("Project status");A({t:"fig",i:cD});A({t:"fig",i:cR,cap:"Completion rate = completed ÷ all projects in the "+unit+"."});
+    A({t:"tbl",head:[byReg?"Region":"Province","Completed","On-going","Not yet started","Other","Total","Cost (₱M)","Completion rate"],num:[0,1,1,1,1,1,1,1],rows:groups.map(function(g){var a=G[g];return [g,fmt(a.c),fmt(a.o),fmt(a.ny),fmt(a.x),fmt(a.n),fmt(a.cost/1e6),pct(a.c,a.n)+"%"];}).concat([["Total",fmt(T0.c),fmt(T0.o),fmt(T0.ny),fmt(T0.x),fmt(T0.n),fmt(T0.cost/1e6),pct(T0.c,T0.n)+"%"]]),total:true});
+    if(cN>=0||cH>=0){A({t:"pb"});hd("Evidence gaps and risk signals");
+      if(cN>=0){A({t:"p",text:"A project tagged completed should have geotagged photos at completion or in operation. These projects have none in SubayBAYAN, so completion cannot be confirmed from the record alone."});A({t:"fig",i:cN});}
+      if(cH>=0){A({t:"p",text:"From the latest monthly accomplishment report (RPMES Form 2) of each project that has one."});A({t:"fig",i:cH});}
+      A({t:"tbl",head:[byReg?"Region":"Province","No completion photo","RPMES High Risk","Slippage ≥10%","Exception reports (open)","Conflicting evidence"],num:[0,1,1,1,1,1],rows:groups.filter(function(g){var a=G[g];return a.nc||a.rh||a.sl||a.ex||a.inc;}).map(function(g){var a=G[g];return [g,fmt(a.nc),fmt(a.rh),fmt(a.sl),fmt(a.ex)+" ("+fmt(a.exo)+")",fmt(a.inc)];})});}
+    if(cL>=0||T0.df25){A({t:"pb"});hd("Delayed starts");if(cL>=0)A({t:"fig",i:cL});
+      if(T0.df25)A({t:"p",text:"20% Development Fund, FY 2025: <b>"+fmt(T0.df25n)+" of "+fmt(T0.df25)+"</b> projects ("+pct(T0.df25n,T0.df25)+"%) are reported as not yet started. Validate with LGUs whether these are real delays or records not yet updated."});}
+    A({t:"pb"});hd("Independent validation (TPM 2026)");if(cT>=0)A({t:"fig",i:cT});
+    var regs=byReg?Object.keys(TP.reg):Object.keys(TP.reg).filter(function(r){return r===region;});
+    if(regs.length){A({t:"tbl",w:[11,22,9,9,9,30],head:["Region","Monitor (CSO)","Projects","Process","Result","Main issue"],num:[0,0,1,1,1,0],rows:regs.map(function(r){var x=TP.reg[r];return [r,x.cso,String(x.n),x.proc?x.proc.toFixed(2):"–",x.res?x.res.toFixed(2):"–",x.issue[0]];})});
+      A({t:"note",text:"Ratings on a 1–4 scale from beneficiary and stakeholder surveys; not engineering verification."});
+      var low=Object.keys(TP.lgu).map(function(k){return TP.lgu[k];}).filter(function(l){return l.res<3&&(!region||region==="Region 12");}).sort(function(a,b){return a.res-b.res;});
+      if(low.length)A({t:"p",text:"<b>LGUs with a TPM Result rating below 3:</b> "+low.map(function(l){return l.name+" ("+l.res.toFixed(2)+")";}).join(", ")+". Their follow-up items should be checked with the Regional Office."});}
+    else A({t:"p",text:window.PUBLIC_BUILD?"Detailed TPM findings are included in the internal DILG version only.":"No TPM 2026 terminal report has been received for "+region+" yet."});
+    A({t:"pb"});hd("Projects for immediate review");A({t:"p",text:"The "+topP.length+" projects with the highest AI Review Priority. Priority is a signal for review only; it does not change official Projects-at-Risk status."});
+    A({t:"tbl",w:[17,15,15,10,12,20],head:["Project code","LGU","Fund · type","Cost (₱)","Status","Why it is flagged"],num:[0,0,0,1,0,0],small:true,rows:topP.map(function(p){return [p.id,p.lgu+", "+p.prov,progL(p)+" · "+p.type,fmt(p.cost||0),p.status+" ("+(p.phys||0)+"%)",whyShort(p)];})});
+    hd("Citizen feedback and actions taken");
+    var tm=tks.filter(function(t){return (t.t||"").slice(0,7)===ym;}),stc3=function(L,st){return L.filter(function(t){return t.st===st;}).length;};
+    A({t:"p",text:"<b>"+fmt(tm.length)+" citizen report"+(tm.length===1?"":"s")+" received in "+mon+"</b> ("+fmt(tks.length)+" in total). As of "+today+": "+fmt(stc3(tks,"Received"))+" newly received, <b>"+fmt(stc3(tks,"Under validation"))+" under validation</b> and "+fmt(stc3(tks,"Resolved"))+" resolved. "+fmt(tks.filter(function(t){return !t.id;}).length)+(tks.filter(function(t){return !t.id;}).length===1?" concerns a project":" concern projects")+" not found in the records. Citizen reports are leads, not proof."});
+    if(tks.length){var tg={};tks.forEach(function(t){var g=byReg?(tReg(t)||"Unspecified"):((t.id&&IDX[t.id]&&IDX[t.id].prov)||"Unspecified");var x=tg[g]||(tg[g]={m:0,a:0,r:0,v:0,d:0});x.a++;if((t.t||"").slice(0,7)===ym)x.m++;if(t.st==="Received")x.r++;else if(t.st==="Under validation")x.v++;else x.d++;});
+      A({t:"tbl",head:[byReg?"Region":"Province","Received this month","Total received","Received (not yet acted on)","Under validation","Resolved"],num:[0,1,1,1,1,1],rows:Object.keys(tg).sort().map(function(g){var x=tg[g];return [g,fmt(x.m),fmt(x.a),fmt(x.r),fmt(x.v),fmt(x.d)];})});
+      var ob={};tks.forEach(function(t){(t.obs.length?t.obs:["Other"]).forEach(function(o){ob[o]=(ob[o]||0)+1;});});
+      A({t:"p",text:"What citizens reported: "+Object.keys(ob).sort(function(a,b){return ob[b]-ob[a];}).map(function(o){return o+" ("+ob[o]+")";}).join("; ")+"."});}
+    var dm=Object.keys(DECN).filter(function(id){return (DECN[id].t||"").slice(0,7)===ym&&(!region||(IDX[id]&&IDX[id].reg===region));}).length;
+    A({t:"p",text:"<b>Review decisions:</b> "+fmt(nd)+" brief"+(nd===1?"":"s")+" decided in total ("+fmt(dm)+" this month): "+dk.Approved+" approved and sent to the decision owner, "+dk["Returned for revision"]+" returned for revision and "+dk["Escalated to Central Office"]+" escalated to Central Office."});
+    var esc2=Object.keys(DEC).filter(function(id){return /^Escalated/.test(DEC[id])&&IDX[id]&&(!region||IDX[id].reg===region);});
+    if(esc2.length){var er={};esc2.forEach(function(id){var r=IDX[id].reg;er[r]=(er[r]||0)+1;});var erk=Object.keys(er).sort(function(a,b){return er[b]-er[a];});
+      A({t:"sub",text:"Projects elevated to Central Office"});
+      A({t:"p",text:"<b>"+fmt(esc2.length)+" project"+(esc2.length===1?" was":"s were")+" elevated to Central Office</b>"+(byReg?", most from "+erk.slice(0,3).map(function(r){return r+" ("+er[r]+")";}).join(", ")+". A high number from one region may signal gaps in regional or institutional capacity and should be validated before support is planned":"")+". "+fmt(esc2.filter(function(id){return !(ESCA[id]&&ESCA[id].s!==COACT[0]);}).length)+" still await Central Office action."});
+      A({t:"tbl",w:[20,10,13,10,22,25],head:["Project","Region","LGU","Elevated","Reviewer's note","Central Office action"],num:[0,0,0,0,0,0],rows:esc2.map(function(id){var p=IDX[id],n=DECN[id]||{},a=ESCA[id]||{};return [id,p.reg,p.lgu,(n.t||"").slice(0,10)||"–",n.n||"–",(a.s||COACT[0])+(a.d&&/scheduled|provided/.test(a.s||"")?" · TA date "+a.d:"")+(a.t?" (updated "+a.t.slice(0,10)+")":"")];})});}
+    hd("Notes on the data");A({t:"ul",items:["Public fields only; financial obligations, disbursements and remarks are excluded.","All sources cover FY 2022–2026. Monthly RPMES reports are available mainly for projects enrolled in LIME-20 from FY 2025; photo counts come from SubayBAYAN.","Locations are approximate (barangay or town centre).","Evidence labels and AI Review Priority are prompts for human review. Every decision is made by a person."]});
+    return {blocks:B,charts:C};}
+  function repHtml(Rp){var C=Rp.charts,th='style="background:#0B2A6B;color:#fff;padding:5px 6px;font-size:8.5pt;border:1px solid #0B2A6B;text-align:center;vertical-align:middle;overflow-wrap:anywhere;word-break:break-word"';
+    return Rp.blocks.map(function(b){
+      if(b.t==="cover")return '<div style="background:#0B2A6B;color:#fff;padding:28px 26px;margin-bottom:14px"><p style="margin:0;color:#E8A800;font-size:10pt;letter-spacing:2px">'+xe(b.kicker)+'</p><h1 style="margin:6px 0;font-size:24pt;color:#fff">'+xe(b.title)+'</h1><p style="margin:0;font-size:11pt">'+b.sub.map(xe).join("<br>")+'</p></div>';
+      if(b.t==="note")return '<p style="font-size:9pt;color:#5B6B8C">'+xe(b.text)+'</p>';
+      if(b.t==="h")return '<h2 style="color:#0B2A6B;font-size:15pt;border-bottom:3px solid #E8A800;padding-bottom:4px;margin:24px 0 10px">'+xe(b.text)+'</h2>';
+      if(b.t==="sub")return '<p style="font-size:11pt;font-weight:bold;color:#0B2A6B;margin:14px 0 4px">'+xe(b.text)+'</p>';
+      if(b.t==="p")return '<p style="font-size:10.5pt;line-height:1.45">'+b.text+'</p>';
+      if(b.t==="ol"||b.t==="ul")return '<'+b.t+' style="font-size:10.5pt;line-height:1.45">'+b.items.map(function(x){return '<li style="margin-bottom:5px">'+x+'</li>';}).join("")+'</'+b.t+'>';
+      if(b.t==="fig"){var c=C[b.i];return '<p style="text-align:center;margin:10px 0 2px">'+c.svg+'</p>'+(b.cap?'<p style="font-size:9pt;color:#5B6B8C;text-align:center;margin:0 0 12px">'+xe(b.cap)+'</p>':'');}
+      if(b.t==="tbl"){var wt=b.w||b.head.map(function(){return 1;}),ws=wt.reduce(function(a,x){return a+x;},0);return '<table cellspacing="0" style="border-collapse:collapse;width:100%;table-layout:fixed;margin:6px 0 12px"><colgroup>'+wt.map(function(x){return '<col style="width:'+(100*x/ws).toFixed(2)+'%">';}).join("")+'</colgroup><tr>'+b.head.map(function(x){return '<th '+th+'>'+xe(x)+'</th>';}).join("")+'</tr>'+b.rows.map(function(r,i){var last=b.total&&i===b.rows.length-1;return '<tr style="background:'+(last?"#E8EEF8":i%2?"#F5F7FB":"#fff")+';'+(last?"font-weight:bold":"")+'">'+r.map(function(x,j){return '<td style="padding:4px 6px;font-size:'+(b.small?8.5:9)+'pt;border:1px solid #D7DEEB;text-align:center;vertical-align:middle;overflow-wrap:anywhere;word-break:break-word">'+xe(x)+'</td>';}).join("")+'</tr>';}).join("")+'</table>';}
+      if(b.t==="pb")return '<div class="pgb" style="page-break-before:always;border-top:1px dashed #D7DEEB;margin:26px 0"></div>';
+      return "";}).join("");}
+  /* --- .docx writer (no library) --- */
+  var CRCT=(function(){var t=[];for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+  function crc32(u){var c=0xFFFFFFFF;for(var i=0;i<u.length;i++)c=CRCT[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+  function zip(files){var enc=new TextEncoder(),parts=[],cen=[],off=0;
+    function u16(v){return [v&255,(v>>>8)&255];}function u32(v){return [v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255];}
+    files.forEach(function(f){var nm=enc.encode(f.name),d=typeof f.data==="string"?enc.encode(f.data):f.data,cr=crc32(d);
+      var h=[].concat(u32(0x04034b50),u16(20),u16(0),u16(0),u16(0),u16(0),u32(cr),u32(d.length),u32(d.length),u16(nm.length),u16(0));
+      parts.push(new Uint8Array(h),nm,d);
+      cen.push(new Uint8Array([].concat(u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(0),u16(0),u32(cr),u32(d.length),u32(d.length),u16(nm.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(off))),nm);
+      off+=h.length+nm.length+d.length;});
+    var cs=0;cen.forEach(function(x){cs+=x.length;});
+    var end=new Uint8Array([].concat(u32(0x06054b50),u16(0),u16(0),u16(files.length),u16(files.length),u32(cs),u32(off),u16(0)));
+    return new Blob(parts.concat(cen,[end]),{type:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});}
+  function xa(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  function run(t,o){o=o||{};return '<w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>'+(o.b?'<w:b/>':'')+(o.c?'<w:color w:val="'+o.c+'"/>':'')+'<w:sz w:val="'+(o.sz||21)+'"/></w:rPr><w:t xml:space="preserve">'+xa(t)+'</w:t></w:r>';}
+  function runsHtml(h,o){o=o||{};return String(h).split(/(<b>|<\/b>)/).reduce(function(a,seg){if(seg==="<b>"){a.b=true;}else if(seg==="</b>"){a.b=false;}else if(seg){a.x+=run(seg.replace(/<[^>]+>/g,""),{b:a.b||o.b,c:o.c,sz:o.sz});}return a;},{x:"",b:false}).x;}
+  function para(inner,pp){return '<w:p><w:pPr>'+(pp||'')+'</w:pPr>'+inner+'</w:p>';}
+  function docx(Rp,pngs){var C=Rp.charts,rels=[],body="",W=9746,id=0;
+    Rp.blocks.forEach(function(b){
+      if(b.t==="cover")body+='<w:tbl><w:tblPr><w:tblW w:w="5000" w:type="pct"/><w:tblCellMar><w:top w:w="360" w:type="dxa"/><w:left w:w="360" w:type="dxa"/><w:bottom w:w="360" w:type="dxa"/><w:right w:w="360" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="'+W+'"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="'+W+'" w:type="dxa"/><w:shd w:val="clear" w:color="auto" w:fill="0B2A6B"/></w:tcPr>'+para(run(b.kicker,{b:1,c:"E8A800",sz:19}))+para(run(b.title,{b:1,c:"FFFFFF",sz:44}),'<w:spacing w:before="80" w:after="80"/>')+b.sub.map(function(x){return para(run(x,{c:"FFFFFF",sz:22}),'<w:spacing w:after="0"/>');}).join("")+'</w:tc></w:tr></w:tbl>'+para("");
+      else if(b.t==="note")body+=para(run(b.text,{c:"5B6B8C",sz:17}));
+      else if(b.t==="h")body+=para(run(b.text,{b:1,c:"0B2A6B",sz:30}),'<w:pStyle w:val="Heading1"/><w:keepNext/><w:pBdr><w:bottom w:val="single" w:sz="18" w:space="3" w:color="E8A800"/></w:pBdr><w:spacing w:before="240" w:after="160"/>');
+      else if(b.t==="sub")body+=para(run(b.text,{b:1,c:"0B2A6B",sz:22}),'<w:keepNext/><w:spacing w:before="200" w:after="80"/>');
+      else if(b.t==="p")body+=para(runsHtml(b.text),'<w:spacing w:after="120"/>');
+      else if(b.t==="ol"||b.t==="ul")b.items.forEach(function(x,i){body+=para(run(b.t==="ol"?(i+1)+".\t":"•\t")+runsHtml(x),'<w:tabs><w:tab w:val="left" w:pos="400"/></w:tabs><w:ind w:left="400" w:hanging="400"/><w:spacing w:after="100"/>');});
+      else if(b.t==="fig"){var c=C[b.i];if(!pngs[b.i])return;id++;var rid="rIdImg"+id,cx=Math.min(5943600,Math.round(c.w/96*914400)),cy=Math.round(cx*c.h/c.w);
+        rels.push({id:rid,t:"media/c"+b.i+".png"});
+        body+=para('<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="'+cx+'" cy="'+cy+'"/><wp:docPr id="'+id+'" name="Chart '+id+'"/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="'+id+'" name="c'+b.i+'.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="'+rid+'"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>','<w:jc w:val="center"/><w:spacing w:before="120" w:after="'+(b.cap?40:160)+'"/>');
+        if(b.cap)body+=para(run(b.cap,{c:"5B6B8C",sz:17}),'<w:jc w:val="center"/><w:spacing w:after="160"/>');}
+      else if(b.t==="tbl"){var n=b.head.length,wt=b.w||b.head.map(function(){return 1;}),ws=wt.reduce(function(a,x){return a+x;},0),CW=wt.map(function(x){return Math.floor(W*x/ws);}),sz=b.small?15:16;
+        var cell=function(x,j,fill,o){return '<w:tc><w:tcPr><w:tcW w:w="'+CW[j]+'" w:type="dxa"/>'+(fill?'<w:shd w:val="clear" w:color="auto" w:fill="'+fill+'"/>':'')+'<w:vAlign w:val="center"/></w:tcPr>'+para(run(x,o),'<w:spacing w:before="20" w:after="20"/><w:jc w:val="center"/>')+'</w:tc>';};
+        body+='<w:tbl><w:tblPr><w:tblW w:w="'+W+'" w:type="dxa"/><w:jc w:val="center"/><w:tblLayout w:type="fixed"/><w:tblBorders><w:top w:val="single" w:sz="4" w:color="D7DEEB"/><w:left w:val="single" w:sz="4" w:color="D7DEEB"/><w:bottom w:val="single" w:sz="4" w:color="D7DEEB"/><w:right w:val="single" w:sz="4" w:color="D7DEEB"/><w:insideH w:val="single" w:sz="4" w:color="D7DEEB"/><w:insideV w:val="single" w:sz="4" w:color="D7DEEB"/></w:tblBorders><w:tblCellMar><w:left w:w="80" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>'+CW.map(function(c){return '<w:gridCol w:w="'+c+'"/>';}).join("")+'</w:tblGrid>'+
+          '<w:tr><w:trPr><w:tblHeader/></w:trPr>'+b.head.map(function(x,j){return cell(x,j,"0B2A6B",{b:1,c:"FFFFFF",sz:sz,h:1});}).join("")+'</w:tr>'+
+          b.rows.map(function(r,i){var last=b.total&&i===b.rows.length-1;return '<w:tr><w:trPr><w:cantSplit/></w:trPr>'+r.map(function(x,j){return cell(x,j,last?"E8EEF8":i%2?"F5F7FB":"",{b:last,sz:sz});}).join("")+'</w:tr>';}).join("")+'</w:tbl>'+para("");}
+      else if(b.t==="pb")body+='<w:p><w:r><w:br w:type="page"/></w:r></w:p>';});
+    var doc='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>'+body+'<w:sectPr><w:footerReference w:type="default" r:id="rIdFtr"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080" w:header="567" w:footer="567" w:gutter="0"/></w:sectPr></w:body></w:document>';
+    var ftr='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:p><w:pPr><w:jc w:val="center"/></w:pPr>'+run("UGNAY-SUBAY · Monitoring and Evaluation Report · Page ",{c:"5B6B8C",sz:16})+'<w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:color w:val="5B6B8C"/><w:sz w:val="16"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:instrText xml:space="preserve"> PAGE </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t>1</w:t></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r></w:p></w:ftr>';
+    var sty='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" w:eastAsia="Arial"/><w:sz w:val="21"/><w:color w:val="1B2540"/><w:lang w:val="en-PH"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:color w:val="0B2A6B"/><w:sz w:val="30"/></w:rPr></w:style></w:styles>';
+    var ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/></Types>';
+    var root='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>';
+    var dr='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdSty" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rIdFtr" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>'+rels.map(function(r){return '<Relationship Id="'+r.id+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="'+r.t+'"/>';}).join("")+'</Relationships>';
+    var files=[{name:"[Content_Types].xml",data:ct},{name:"_rels/.rels",data:root},{name:"word/document.xml",data:doc},{name:"word/styles.xml",data:sty},{name:"word/footer1.xml",data:ftr},{name:"word/_rels/document.xml.rels",data:dr}];
+    pngs.forEach(function(p,i){if(p){var bin=atob(p),u=new Uint8Array(bin.length);for(var k=0;k<bin.length;k++)u[k]=bin.charCodeAt(k);files.push({name:"word/media/c"+i+".png",data:u});}});
+    return zip(files);}
+  function svgPng(c){return new Promise(function(ok){var im=new Image();im.onload=function(){var k=2,cv=document.createElement("canvas");cv.width=c.w*k;cv.height=c.h*k;var x=cv.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,cv.width,cv.height);x.drawImage(im,0,0,cv.width,cv.height);ok(cv.toDataURL("image/png").split(",")[1]);};im.onerror=function(){ok(null);};im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(c.svg);});}
+  /* --- PDF export (report pages -> images -> PDF) --- */
+  var PPCSS='.pp{font-family:Arial,Helvetica,sans-serif;color:#1B2540;font-size:13px;line-height:1.4;background:#fff}.pp *{box-sizing:border-box}.pp h1,.pp h2,.pp p,.pp li,.pp td,.pp th{font-family:Arial,Helvetica,sans-serif;letter-spacing:normal}.pp p{margin:0 0 9px}.pp ol,.pp ul{margin:0 0 9px;padding-left:24px}.pp li{margin-bottom:4px}.pp table{min-width:0;width:100%;border-collapse:collapse;font-size:inherit}.pp svg{max-width:100%;height:auto}';
+  function pdfBlob(pages){var enc=new TextEncoder(),parts=[],len=0,offs=[];function add(x){if(typeof x==="string")x=enc.encode(x);parts.push(x);len+=x.length;}
+    function obj(n,f){offs[n]=len;add(n+" 0 obj\n");f();add("\nendobj\n");}
+    add("%PDF-1.4\n");var N=pages.length,max=2+3*N;
+    obj(1,function(){add("<< /Type /Catalog /Pages 2 0 R >>");});
+    obj(2,function(){add("<< /Type /Pages /Kids ["+pages.map(function(_,i){return (3+3*i)+" 0 R";}).join(" ")+"] /Count "+N+" >>");});
+    pages.forEach(function(pg,i){var a=3+3*i,c="q 595.28 0 0 841.89 0 0 cm /Im0 Do Q";
+      obj(a,function(){add("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 "+(a+2)+" 0 R >> >> /Contents "+(a+1)+" 0 R >>");});
+      obj(a+1,function(){add("<< /Length "+c.length+" >>\nstream\n"+c+"\nendstream");});
+      obj(a+2,function(){add("<< /Type /XObject /Subtype /Image /Width "+pg.w+" /Height "+pg.h+" /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+pg.b.length+" >>\nstream\n");add(pg.b);add("\nendstream");});});
+    var x=len;add("xref\n0 "+(max+1)+"\n0000000000 65535 f \n");for(var n=1;n<=max;n++)add(("0000000000"+offs[n]).slice(-10)+" 00000 n \n");
+    add("trailer\n<< /Size "+(max+1)+" /Root 1 0 R >>\nstartxref\n"+x+"\n%%EOF");return new Blob(parts,{type:"application/pdf"});}
+  function pageImg(div){return new Promise(function(ok,bad){var W=794,H=1123,k=1.6,xml=new XMLSerializer().serializeToString(div);
+    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'"><foreignObject x="0" y="0" width="'+W+'" height="'+H+'">'+xml+'</foreignObject></svg>';
+    var im=new Image();im.onload=function(){try{var c=document.createElement("canvas");c.width=Math.round(W*k);c.height=Math.round(H*k);var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.scale(k,k);x.drawImage(im,0,0);
+      var bin=atob(c.toDataURL("image/jpeg",0.88).split(",")[1]),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);ok({b:u,w:c.width,h:c.height});}catch(e){bad(e);}};
+    im.onerror=function(){bad(new Error("render"));};im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);});}
+  function makePdf(){if(!REP)drawReport();
+    var M=document.createElement("div");M.className="pp";M.style.cssText="position:absolute;left:-12000px;top:0;width:794px;padding:0 56px;box-sizing:border-box";var st=document.createElement("style");st.textContent=PPCSS;M.appendChild(st);
+    var box=document.createElement("div");box.innerHTML=repHtml(REP);M.appendChild(box);document.body.appendChild(M);
+    var CH=1123-56-56-34,pages=[[]],h=0;
+    function hgt(el){var cs=getComputedStyle(el);return el.getBoundingClientRect().height+parseFloat(cs.marginTop||0)+parseFloat(cs.marginBottom||0);}
+    function push(el,eh){pages[pages.length-1].push(el);h+=eh;}
+    function newPage(){if(pages[pages.length-1].length){var cur=pages[pages.length-1],last=cur[cur.length-1];pages.push([]);h=0;if(last&&(last.tagName==="H2"||/font-weight:bold/.test(last.getAttribute("style")||""))&&last.tagName!=="TABLE"&&cur.length>1){cur.pop();push(last,hgt(last));}}}
+    Array.prototype.slice.call(box.children).forEach(function(el){
+      if(el.classList.contains("pgb")){newPage();return;}
+      var eh=hgt(el);
+      if(h+eh<=CH){push(el,eh);return;}
+      if(el.tagName==="TABLE"){var rows=Array.prototype.slice.call(el.rows),head=rows[0],hh=head.getBoundingClientRect().height,cg=el.querySelector("colgroup");
+        var mk=function(){var t=el.cloneNode(false);if(cg)t.appendChild(cg.cloneNode(true));t.appendChild(head.cloneNode(true));return t;};
+        var t=mk(),th=hh+18;if(CH-h<hh+80)newPage();
+        rows.slice(1).forEach(function(r){var rh=r.getBoundingClientRect().height;if(h+th+rh>CH){push(t,th);newPage();t=mk();th=hh+18;}t.appendChild(r.cloneNode(true));th+=rh;});
+        push(t,th);return;}
+      newPage();push(el,eh);});
+    var N=pages.length,divs=pages.map(function(list,i){var d=document.createElement("div");d.setAttribute("xmlns","http://www.w3.org/1999/xhtml");d.className="pp";d.style.cssText="width:794px;height:1123px;padding:56px 56px 0;box-sizing:border-box;position:relative;overflow:hidden;background:#fff";
+      var s2=document.createElement("style");s2.textContent=PPCSS;d.appendChild(s2);list.forEach(function(el){d.appendChild(el.cloneNode(true));});
+      var f=document.createElement("div");f.style.cssText="position:absolute;left:0;right:0;bottom:22px;text-align:center;font-size:10px;color:#5B6B8C;font-family:Arial,Helvetica,sans-serif";f.textContent="UGNAY-SUBAY · Monitoring and Evaluation Report · Page "+(i+1)+" of "+N;d.appendChild(f);return d;});
+    document.body.removeChild(M);
+    return divs.reduce(function(pr,d){return pr.then(function(acc){return pageImg(d).then(function(im){acc.push(im);return acc;});});},Promise.resolve([])).then(pdfBlob);}
+  function savePdf(){$("rep-msg").textContent="Preparing the PDF…";drawReport();
+    makePdf().then(function(blob){var fn="UGNAY-SUBAY_"+($("rep-reg").value?"Regional":"National")+"_ME_Report_"+($("rep-reg").value||"National").replace(/\s+/g,"")+"_"+new Date().toISOString().slice(0,10)+".pdf";
+      function local(){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();setTimeout(function(){a.remove();},500);$("rep-msg").textContent="PDF downloaded.";}
+      if(window.claude&&window.claude.use){window.claude.use("downloads").then(function(dl){if(!dl){local();return;}dl.save({filename:fn,data:blob}).then(function(){$("rep-msg").textContent="PDF saved.";},function(e){$("rep-msg").textContent=e&&e.code==="declined"?"Download cancelled.":"PDF download is not available in this view.";});});}else local();
+    },function(){$("rep-msg").textContent="This browser can't build the PDF here. Download the Word file and save it as PDF instead.";try{window.print();}catch(e){}});}
+  var REP=null;
+  function drawReport(){REP=buildReport($("rep-reg").value);$("rep-paper").innerHTML=repHtml(REP);}
+  function wordReport(){if(!REP)drawReport();$("rep-msg").textContent="Preparing the Word file…";drawReport();
+    Promise.all(REP.charts.map(svgPng)).then(function(pngs){var blob=docx(REP,pngs);
+      var fn="UGNAY-SUBAY_"+($("rep-reg").value?"Regional":"National")+"_ME_Report_"+($("rep-reg").value||"National").replace(/\s+/g,"")+"_"+new Date().toISOString().slice(0,10)+".docx";
+      function local(){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();setTimeout(function(){a.remove();},500);$("rep-msg").textContent="Word file downloaded.";}
+      if(window.claude&&window.claude.use){window.claude.use("downloads").then(function(dl){if(!dl){local();return;}
+        dl.save({filename:fn,data:blob}).then(function(){$("rep-msg").textContent="Word file saved.";},function(e){$("rep-msg").textContent=e&&e.code==="declined"?"Download cancelled.":"Download is not available in this view. Use Print / Save as PDF instead.";});});}
+      else local();});}
+
+  $("rep-reg").innerHTML='<option value="">All regions (national)</option>'+REGS.map(function(r){return '<option>'+r+'</option>';}).join("");
+  $("rep-go").addEventListener("click",drawReport);$("rep-reg").addEventListener("change",drawReport);
+  $("rep-word").addEventListener("click",wordReport);$("rep-print").addEventListener("click",savePdf);
+  window.addEventListener("hashchange",function(){route();window.scrollTo(0,0);});
+  var APPLIED="all";
+  function applyFund(){var want=role==="pub"?"all":FUND;document.querySelectorAll(".fundc").forEach(function(el){el.hidden=role==="pub";});if(want===APPLIED)return;APPLIED=want;R=want==="all"?RA:RA.filter(function(p){return p.fund===want;});try{provOpts();lguOpts();}catch(e){}try{search();}catch(e){}try{fillPick();}catch(e){}}
+  function setFund(f){FUND=f;store("us4-fund",f);QP=1;route();}
+  $("fund").value=FUND;$("fund").addEventListener("change",function(){setFund(this.value);});
+  if(FUND!=="all")setTimeout(function(){setFund(FUND);},0);
+
+  /* ---------- PUBLIC ---------- */
+  function opts(el,list,all){$(el).innerHTML='<option value="">'+all+'</option>'+list.map(function(x){return '<option>'+esc(x)+'</option>';}).join("");}
+  opts("f-reg",REGS,"All regions");
+  $("u-reg").innerHTML=REGS.map(function(r){return '<option>'+esc(r)+'</option>';}).join("");
+  function uniq(list){var o=[];list.forEach(function(x){if(x&&o.indexOf(x)<0)o.push(x);});return o.sort();}
+  function provOpts(){var r=$("f-reg").value;opts("f-prov",uniq(R.filter(function(p){return !r||p.reg===r;}).map(function(p){return p.prov;})),"All provinces");lguOpts();}
+  function lguOpts(){var r=$("f-reg").value,pv=$("f-prov").value;opts("f-lgu",uniq(R.filter(function(p){return(!r||p.reg===r)&&(!pv||p.prov===pv);}).map(function(p){return p.mun;})),"All cities / municipalities");}
+  provOpts();$("f-reg").addEventListener("change",provOpts);$("f-prov").addEventListener("change",lguOpts);
+  opts("f-cat",uniq(R.map(function(p){return p.type;})),"All categories");
+
+  function gHtml(p){if(!p.g)return '';var w=p.noComp;
+    return '<p class="small"><b style="color:var(--ink)">Geotagged photos in SubayBAYAN:</b> '+GST.map(function(n,i){return n+' <b style="color:'+(p.g[i]?'var(--ink)':'var(--muted)')+'">'+p.g[i]+'</b>';}).join(' · ')+(w?'<br><b style="color:var(--gold)">⚠ Marked completed, but no geotagged photo at completion or in operation.</b>':'')+'</p>';}
+  function rpHtml(p){if(window.PUBLIC_BUILD)return '<p class="small">RPMES / LIME-20 monitoring reports are shown in the internal DILG version only.</p>';var x=p.rx;if(!x)return '<p class="small">'+(p.yr>=2025?'No RPMES (LIME-20) report matched for this project.':'No RPMES (LIME-20) monthly report on file for this project.')+'</p>';
+    var rc=x.risk==="High Risk"?"var(--red)":/Moderate|Low/.test(x.risk||"")?"var(--gold)":"var(--ok)";
+    var h='<dl class="kv">'+(x.mo?'<dt>Latest report</dt><dd>'+esc(x.mo)+'</dd>':'')+(x.act!=null?'<dt>Accomplishment</dt><dd>'+x.act+'% actual'+(x.tgt!=null?' vs '+x.tgt+'% target':'')+'</dd>':'')+(x.slip!=null?'<dt>Slippage</dt><dd>'+x.slip+'%</dd>':'')+(x.risk?'<dt>Risk level</dt><dd><b style="color:'+rc+'">'+esc(x.risk)+'</b></dd>':'')+(x.coc?'<dt>Completion</dt><dd>Certificate dated '+x.coc+'</dd>':'')+'</dl>';
+    if(x.exc)h+='<p class="small"><b style="color:var(--gold)">Exception report ('+esc(x.exc.st||'status not given')+'):</b> '+esc(x.exc.find)+(x.exc.act?' <i>Action: '+esc(x.exc.act)+'</i>':'')+'</p>';
+    if(x.res)h+='<p class="small"><b style="color:var(--ok)">Observed result:</b> '+esc(x.res)+'</p>';
+    return h+'<p class="small">Source: LIME-20 / RPMES forms (FY 2022–2026 export).</p>';}
+  function interv(p,e){var a=[],tk=tickets(p.id).filter(function(t){return t.st!=="Resolved";}).length;
+    if(e.k==="i")a.push("Conduct a validation visit and ask the LGU for updated means of verification (geotagged photos, certificate of completion).");
+    if(e.k==="p")a.push("Ask the LGU to correct the SubayBAYAN record; raise it at the RPMC problem-solving session if unresolved.");
+    if(p.noComp)a.push("Request geotagged completion and in-operation photos from the LGU through SubayBAYAN.");
+    if(p.rx&&p.rx.risk==="High Risk")a.push("Include in the next RPMC field monitoring and agree on a catch-up plan with the LGU.");
+    if(p.rx&&p.rx.exc&&p.rx.exc.st!=="Resolved")a.push("Follow up the open RPMES exception report until it is resolved.");
+    if(p.status==="Not Yet Started"&&p.yr<=2024)a.push("Ask the LGU for the reason for the delay and a start date; consider technical assistance.");
+    if(tk)a.push("Validate the citizen report"+(tk>1?"s":"")+" on site and update the ticket status.");
+    if(e.k==="u"&&!p.noComp&&!(p.status==="Not Yet Started"&&p.yr<=2024))a.push("Gather independent evidence: schedule TPM or field validation if resources allow.");
+    if(!a.length)a.push("No follow-up needed; continue routine monitoring.");
+    return a;}
+  function tpmHtml(p){var o=tpmOf(p),h="";
+    if(o.lgu){var L=o.lgu;h='<dl class="kv"><dt>Monitor</dt><dd>'+esc(o.reg.cso)+' · TPM 2026</dd><dt>'+esc(L.name)+'</dt><dd>Process '+L.proc.toFixed(2)+'/4 · Result '+L.res.toFixed(2)+'/4 · '+L.n+' project'+(L.n>1?'s':'')+', '+L.resp+' respondents</dd>'+(L.projects?'<dt>Monitored</dt><dd>'+esc(L.projects)+'</dd>':'')+'</dl>'+
+      '<p class="small"><b style="color:'+(o.hit?'var(--ok)':'var(--gold)')+'">'+(o.hit?'✓ Likely one of the monitored projects (name or barangay matches the report). Confirm with the RO.':'This project is not named in the monitored list; ratings are for the LGU sample.')+'</b></p>'+
+      (L.pos[0]?'<p class="small"><b style="color:var(--ok)">Positive:</b> '+esc(L.pos[0])+'</p>':'')+(L.imp[0]?'<p class="small"><b style="color:var(--gold)">Follow-up:</b> '+esc(L.imp[0])+'</p>':'');}
+    else if(o.cov)h='<p class="small">'+esc(o.reg.cso)+' monitored <b style="color:var(--ink)">'+o.cov+'</b> completed project'+(o.cov>1?'s':'')+' in this LGU (TPM 2026). The project-level list is not in the readable report, so this project can\'t be confirmed yet.</p>';
+    else if(o.reg)h='<p class="small">'+esc(p.reg)+' submitted its TPM 2026 report ('+esc(o.reg.cso)+'); this LGU was not in the sample.</p>';
+    else h='<p class="small">TPM 2026 for '+esc(p.reg)+': '+TPST[o.st]+'.</p>';
+    if(o.reg)h+='<p class="small">Region: '+esc(o.reg.scope)+(o.reg.proc?' · Process '+o.reg.proc.toFixed(2)+', Result '+o.reg.res.toFixed(2):'')+'.</p>';
+    return h;}
+  /* ---------- geotagged photos ---------- */
+  var PH=store("us4-ph")||{};
+  function dist(a,b,c,d){var r=Math.PI/180,x=Math.sin((c-a)*r/2),y=Math.sin((d-b)*r/2);return 12742*Math.asin(Math.sqrt(x*x+Math.cos(a*r)*Math.cos(c*r)*y*y));}
+  function exif(buf){try{var d=new DataView(buf);if(d.getUint16(0)!==0xFFD8)return{};var o=2,L=d.byteLength;
+    while(o<L-4){var m=d.getUint16(o);if(m===0xFFE1&&d.getUint32(o+4)===0x45786966)return tiff(d,o+10);if((m&0xFF00)!==0xFF00)break;o+=2+d.getUint16(o+2);}}catch(e){}return{};}
+  function tiff(d,t){var le=d.getUint16(t)===0x4949;function u16(x){return d.getUint16(x,le);}function u32(x){return d.getUint32(x,le);}
+    function ifd(off){var n=u16(t+off),r={};for(var i=0;i<n;i++){var e=t+off+2+i*12;r[u16(e)]={cnt:u32(e+4),vo:e+8,val:u32(e+8)};}return r;}
+    function rat(e){var a=[];for(var i=0;i<3;i++){var x=t+e.val+i*8;a.push(u32(x)/(u32(x+4)||1));}return a[0]+a[1]/60+a[2]/3600;}
+    function str(e){var x=e.cnt>4?t+e.val:e.vo,s="";for(var i=0;i<e.cnt-1;i++)s+=String.fromCharCode(d.getUint8(x+i));return s;}
+    var z=ifd(u32(t+4)),out={};
+    if(z[0x8769]){var ex=ifd(z[0x8769].val);if(ex[0x9003])out.date=str(ex[0x9003]);}
+    if(!out.date&&z[0x0132])out.date=str(z[0x0132]);
+    if(z[0x8825]){var g=ifd(z[0x8825].val);if(g[2]&&g[4]){out.lat=rat(g[2]);out.lng=rat(g[4]);
+      if(g[1]&&d.getUint8(g[1].vo)===83)out.lat=-out.lat;if(g[3]&&d.getUint8(g[3].vo)===87)out.lng=-out.lng;}}
+    if(out.date)out.date=out.date.slice(0,10).replace(/:/g,"-");return out;}
+  function phChk(p,h){var c=[];
+    if(h.lat==null)c.push({ok:false,t:"No location saved in the photo. Ask for one taken with location on."});
+    else if(p.lat!=null){var k=dist(p.lat,p.lng,h.lat,h.lng),lim={b:3,m:10,p:40}[p.geo]||10,w=p.geo==="b"?"barangay":p.geo==="p"?"province centre":"town";
+      c.push(k>lim?{ok:false,t:"Taken about "+k.toFixed(1)+" km from the listed "+w+". Check the site."}:{ok:true,t:"Taken about "+k.toFixed(1)+" km from the listed "+w+"."});}
+    if(!h.date)c.push({ok:false,t:"No date saved in the photo."});
+    else if(+h.date.slice(0,4)<p.yr)c.push({ok:false,t:"Dated "+h.date+", before the "+p.yr+" funding. May not show this project."});
+    else c.push({ok:true,t:"Dated "+h.date+"."});
+    return c;}
+  function photoBox(p,mode){var a=PH[p.id]||[],show=mode==="card"?a.slice(-3):a;
+    return '<div class="phbox" data-phb="'+esc(p.id)+'" data-mode="'+mode+'">'+(mode==="full"?'<b style="font-size:.85rem">Project photos</b>':'')+
+      (a.length?'<div class="phgrid">'+show.map(function(h){return '<figure class="phi"><img src="'+h.src+'" alt="Photo of the project site"><figcaption><span><b style="color:var(--ink)">'+esc(h.by)+'</b>'+(h.lat!=null?' · <a href="https://www.openstreetmap.org/?mlat='+h.lat.toFixed(6)+'&mlon='+h.lng.toFixed(6)+'#map=17/'+h.lat.toFixed(6)+'/'+h.lng.toFixed(6)+'" target="_blank" rel="noopener">View pin ↗</a>':'')+'</span>'+phChk(p,h).map(function(c){return '<span class="ck '+(c.ok?'ok':'w')+'">'+(c.ok?'✓ ':'⚠ ')+esc(c.t)+'</span>';}).join("")+'</figcaption></figure>';}).join("")+'</div>'+(mode==="card"&&a.length>3?'<span class="small">+'+(a.length-3)+' more</span>':''):'<span class="small">No photo yet.</span>')+
+      '<div class="btnrow"><label class="btn ghost phadd">📷 Add a geotagged photo<input type="file" accept="image/jpeg,image/*" class="ph-in" data-ph="'+esc(p.id)+'"></label><span class="small" data-phmsg="'+esc(p.id)+'">The photo\'s own GPS and date set the pin. Saved on this device only (demo).</span></div></div>';}
+  function addPhoto(id,file){var p=byId(id);if(!p||!file)return;
+    file.arrayBuffer().then(function(buf){var x=exif(buf),fr=new FileReader();
+      fr.onload=function(){var im=new Image();im.onload=function(){var sc=Math.min(1,480/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+        var h={src:c.toDataURL("image/jpeg",0.7),lat:x.lat,lng:x.lng,date:x.date,by:role==="pub"?"Citizen":"Regional Office",ts:Date.now()};
+        (PH[id]=PH[id]||[]).push(h);try{localStorage.setItem("us4-ph",JSON.stringify(PH));}catch(e){PH[id].pop();document.querySelectorAll('[data-phmsg="'+id+'"]').forEach(function(m){m.textContent="Storage is full on this device. Remove old demo data to add more.";});return;}
+        document.querySelectorAll('[data-phb="'+id+'"]').forEach(function(b){b.outerHTML=photoBox(p,b.getAttribute("data-mode"));});};im.src=fr.result;};fr.readAsDataURL(file);});}
+  document.addEventListener("change",function(e){var t=e.target;if(t.classList&&t.classList.contains("ph-in")){addPhoto(t.getAttribute("data-ph"),t.files[0]);}});
+  function card(p){var tk=tickets(p.id).length;
+    return '<div class="pcard"><div class="hd"><div><b>'+esc(p.title)+'</b><div class="small">'+esc([p.brgy&&("Brgy. "+p.brgy.replace(/^Brgy\.?\s*/i,"")),p.mun,p.prov].filter(Boolean).join(", "))+' · '+esc(p.reg)+' · LGSF-'+esc(p.prog)+' · '+p.yr+'</div></div><span class="mono">'+esc(p.id)+'</span></div>'+
+    '<div class="meta"><span>Status <b>'+esc(p.status)+'</b></span><span>Cost <b>₱'+peso(p.cost)+'</b></span><span>Reported progress <b>'+p.phys+'%</b></span>'+(p.ben?'<span>Beneficiaries <b>'+peso(p.ben)+'</b></span>':'')+'<span>Type <b>'+esc(p.type)+'</b></span></div><div class="prog"><i style="width:'+Math.min(100,p.phys)+'%"></i></div>'+
+    photoBox(p,'card')+'<div class="btnrow"><button class="btn" type="button" data-share="'+esc(p.id)+'">Share what you see</button><span class="small">'+tk+' citizen observation'+(tk===1?'':'s')+' so far</span></div></div>';}
+  function search(){
+    var q=$("q").value.trim().toLowerCase(),r=$("f-reg").value,pv=$("f-prov").value,l=$("f-lgu").value,y=$("f-yr").value,c=$("f-cat").value;
+    if(!q&&!r&&!pv&&!l&&!y&&!c){$("results").innerHTML='<div class="hint">Type a project name, code or place, or pick a filter, then press <b>Search projects</b>. '+peso(R.length)+' projects available.</div>';return;}
+    var res=R.filter(function(p){if(r&&p.reg!==r)return false;if(pv&&p.prov!==pv)return false;if(l&&p.mun!==l)return false;if(y&&String(p.yr)!==y)return false;if(c&&p.type!==c)return false;if(q){var hay=(p.id+" "+p.title+" "+p.mun+" "+p.brgy+" "+p.prov).toLowerCase();if(hay.indexOf(q)<0)return false;}return true;});
+    $("results").innerHTML=res.length?'<p class="small">'+peso(res.length)+' project'+(res.length>1?'s':'')+' found'+(res.length>30?' · showing the first 30, add filters to narrow down':'')+'</p>'+res.slice(0,30).map(card).join(""):'<div class="hint">No matching project. Try fewer filters, or report an unlisted project.</div>';
+  }
+  $("dosearch").addEventListener("click",search);
+  $("q").addEventListener("keydown",function(e){if(e.key==="Enter")search();});
+  $("clear").addEventListener("click",function(){$("q").value="";$("f-reg").value="";provOpts();$("f-yr").value="";$("f-cat").value="";search();});
+  $("results").addEventListener("click",function(e){var b=e.target.closest("[data-share]");if(b)openForm(b.dataset.share);});
+  $("nofind").addEventListener("click",function(){openForm(null);});
+  $("track").addEventListener("click",function(){var n=$("tno").value.trim().toUpperCase(),t=T.filter(function(x){return x.no===n;})[0];
+    $("trackres").innerHTML=t?'<div class="pcard"><span class="ticket">'+esc(t.no)+'</span><span class="status '+stc(t.st)+'">'+esc(t.st)+'</span><span class="small">'+(t.id&&byId(t.id)?esc(byId(t.id).title)+' · '+esc(byId(t.id).lgu):'Unlisted project')+' · filed '+esc(t.t)+'</span></div>':'<div class="hint">No ticket found. Check the number, for example US-7Q2K.</div>';});
+  function stc(s){return s==="Received"?"s-rec":s==="Under validation"?"s-val":"s-res";}
+
+  var formFor=null,obs={};
+  function openForm(id){formFor=id;obs={};document.querySelectorAll("#obs button").forEach(function(b){b.setAttribute("aria-pressed","false");});$("fdesc").value="";
+    var p=id?byId(id):null;$("m-proj").textContent=p?p.title+" · "+p.lgu+" ("+p.id+")":"Unlisted project: describe where it is.";
+    $("unl").style.display=id?"none":"grid";$("u-loc").value="";
+    $("fbody").style.display="grid";$("fdone").style.display="none";$("ov").classList.add("on");}
+  function closeForm(){$("ov").classList.remove("on");}
+  $("obs").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;obs[b.dataset.o]=!obs[b.dataset.o];b.setAttribute("aria-pressed",!!obs[b.dataset.o]);});
+  $("fcancel").addEventListener("click",closeForm);$("fclose").addEventListener("click",closeForm);
+  $("ov").addEventListener("click",function(e){if(e.target===$("ov"))closeForm();});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape")closeForm();});
+  $("fform").addEventListener("submit",function(e){e.preventDefault();
+    var c="ABCDEFGHJKMNPQRSTUVWXYZ23456789",no="US-";for(var i=0;i<4;i++)no+=c[Math.floor(Math.random()*c.length)];
+    T.unshift({no:no,id:formFor,reg:formFor?byId(formFor).reg:$("u-reg").value,loc:formFor?"":$("u-loc").value.trim(),obs:Object.keys(obs).filter(function(k){return obs[k];}),d:$("fdesc").value.trim(),st:"Received",t:new Date().toISOString().slice(0,10)});saveT();drawNav();
+    $("tkno").textContent=no;$("tno").value=no;$("fbody").style.display="none";$("fdone").style.display="grid";search();});
+
+  /* ---------- REGIONAL OFFICE ---------- */
+  var roReg=store("us4-reg")||"NCR";if(REGS.indexOf(roReg)<0)roReg="NCR";
+  $("ro-reg").innerHTML=REGS.map(function(r){return '<option>'+esc(r)+'</option>';}).join("");$("ro-reg").value=roReg;
+  $("ro-reg").addEventListener("change",function(){roReg=this.value;QF={q:"",prov:"",st:"",pr:"",ev:"",dec:""};QP=1;store("us4-reg",roReg);drawQueue();fillPick();drawNav();});
+  function inReg(){return R.filter(function(p){return p.reg===roReg;});}
+  function rank(a,b){var o="hml".indexOf(a.pr[0])-"hml".indexOf(b.pr[0]);return o||b.cost-a.cost;}
+  var QF={q:"",prov:"",st:"",pr:"",ev:"",dec:""},QP=1,PER=20,PAL=["#2F6FD6","#3FD18A","#F2C230","#E86A5C","#9B7BEA","#2CC7C9","#F08BC0","#9DB0D4","#5d6f94"];
+  function pie(seg,lbl){var tot=seg.reduce(function(a,x){return a+x.v;},0)||1,r=46,c=2*Math.PI*r,off=0,svg='<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="'+r+'" fill="none" stroke="#11295a" stroke-width="20"/>';
+    seg.forEach(function(x){if(!x.v)return;var L=c*x.v/tot;svg+='<circle cx="60" cy="60" r="'+r+'" fill="none" stroke="'+x.c+'" stroke-width="20" stroke-dasharray="'+L.toFixed(2)+' '+(c-L).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'" transform="rotate(-90 60 60)"/>';off+=L;});
+    svg+='<text x="60" y="61" text-anchor="middle" fill="#eef3fb" font-family="Verdana" font-weight="700" font-size="16">'+peso(tot)+'</text><text x="60" y="76" text-anchor="middle" fill="#9db0d4" font-size="9">'+(lbl||"projects")+'</text></svg>';
+    return '<div class="pie">'+svg+'<div class="lg">'+seg.filter(function(x){return x.v;}).map(function(x){return '<span'+(x.k?' class="lk" data-k="'+esc(x.k)+'"':'')+'><i style="background:'+x.c+'"></i>'+esc(x.l)+'<b>'+peso(x.v)+'</b><em>'+Math.round(100*x.v/tot)+'%</em></span>';}).join("")+'</div></div>';}
+  function pager(el,n,page,per,go){var pages=Math.ceil(n/per);if(pages<=1){el.innerHTML="";return;}
+    var b=[],add=function(pg,t,cur){b.push('<button type="button" data-pg="'+pg+'"'+(cur?' aria-current="page"':'')+'>'+t+'</button>');};
+    if(page>1)add(page-1,"‹ Prev");var lo=Math.max(1,page-2),hi=Math.min(pages,page+2);if(lo>1){add(1,"1");if(lo>2)b.push('<span>…</span>');}
+    for(var i=lo;i<=hi;i++)add(i,String(i),i===page);if(hi<pages){if(hi<pages-1)b.push('<span>…</span>');add(pages,String(pages));}if(page<pages)add(page+1,"Next ›");
+    el.innerHTML=b.join("");el.onclick=function(e){var x=e.target.closest("button[data-pg]");if(x)go(+x.dataset.pg);};}
+  function stGroup(p){return p.status==="Completed"||p.status==="On-going"||p.status==="Not Yet Started"?p.status:"other";}
+  function drawQueue(){
+    var ps=inReg(),hi=ps.filter(function(p){return p.pr[0]==="h";}).length,open=T.filter(function(t){return t.st!=="Resolved"&&tReg(t)===roReg;}).length,dec=ps.filter(function(p){return DEC[p.id];}).length,cost=ps.reduce(function(a,p){return a+(p.cost||0);},0);
+    $("ro-kpis").innerHTML='<button type="button" class="stat" data-k="all"><b>'+peso(ps.length)+'</b><span>Projects in the region</span><small>₱'+(cost/1e9).toFixed(2)+'B total project cost</small></button><button type="button" class="stat r" data-k="h"><b>'+peso(hi)+'</b><span>High AI Review Priority</span><small>for closer review</small></button><button type="button" class="stat g" data-k="dec"><b>'+peso(dec)+'</b><span>Decisions recorded</span><small>on review briefs</small></button><button type="button" class="stat" style="border-left-color:var(--cit)" data-k="tk"><b>'+open+'</b><span>Open citizen tickets</span><small>received or under validation</small></button>';
+    var cnt={Completed:0,"On-going":0,"Not Yet Started":0,other:0};ps.forEach(function(p){cnt[stGroup(p)]++;});
+    $("ro-pie1").innerHTML=pie([{l:"Completed",v:cnt.Completed,c:"#3FD18A",k:"Completed"},{l:"On-going",v:cnt["On-going"],c:"#F2C230",k:"On-going"},{l:"Not yet started",v:cnt["Not Yet Started"],c:"#7f93b8",k:"Not Yet Started"},{l:"Other",v:cnt.other,c:"#E86A5C",k:"other"}]);
+    var pv={};ps.forEach(function(p){var k=p.prov||"(not given)";pv[k]=(pv[k]||0)+1;});var ks=Object.keys(pv).sort(function(a,b){return pv[b]-pv[a];}),seg=ks.slice(0,8).map(function(k,i){return{l:k,v:pv[k],c:PAL[i],k:"prov:"+k};});
+    if(ks.length>8)seg.push({l:"Others ("+(ks.length-8)+")",v:ks.slice(8).reduce(function(a,k){return a+pv[k];},0),c:PAL[8]});
+    $("ro-pie2").innerHTML=pie(seg);
+    $("qf-prov").innerHTML='<option value="">All provinces / cities</option>'+ks.slice().sort().map(function(k){return '<option'+(QF.prov===k?' selected':'')+'>'+esc(k)+'</option>';}).join("");
+    ["q","st","pr","ev","dec"].forEach(function(k){$("qf-"+k).value=QF[k];});
+    var q=QF.q.toLowerCase(),L=ps.filter(function(p){return (!QF.prov||(p.prov||"(not given)")===QF.prov)&&(!QF.st||stGroup(p)===QF.st)&&(!QF.pr||p.pr[0]===QF.pr)&&(!QF.ev||p.ev.k===QF.ev)&&(!QF.dec||(QF.dec==="done"?!!DEC[p.id]:!DEC[p.id]))&&(!q||(p.id+" "+p.title+" "+p.lgu+" "+p.prov).toLowerCase().indexOf(q)>-1);}).sort(rank);
+    var pages=Math.max(1,Math.ceil(L.length/PER));if(QP>pages)QP=pages;
+    $("ro-count").textContent=peso(L.length)+" of "+peso(ps.length)+" projects · page "+QP+" of "+pages;
+    $("ro-reg-tb").innerHTML=L.slice((QP-1)*PER,QP*PER).map(function(p){
+      return '<tr class="click" data-id="'+esc(p.id)+'"><td class="mono">'+esc(p.id)+'</td><td>'+esc(p.lgu)+'<br><span class="small">'+esc(p.prov)+'</span></td><td>'+esc(progL(p))+' · '+p.yr+'<br><span class="small">'+esc(p.type)+' · '+esc(p.status)+'</span></td><td class="num">'+peso(p.cost)+'</td><td>'+p.phys+'%</td><td>'+tickets(p.id).length+'</td><td><span class="pill l-'+p.ev.k+'">'+p.ev.t+'</span></td><td><span class="pill pr-'+p.pr[0]+'">'+p.pr[1]+'</span></td><td class="small">'+esc(DEC[p.id]||"Pending")+'</td></tr>';}).join("")||'<tr><td colspan="9" class="small">No projects match these filters.</td></tr>';
+    pager($("ro-pg"),L.length,QP,PER,function(pg){QP=pg;drawQueue();$("ro-list").scrollIntoView({behavior:"smooth"});});
+  }
+  function qfSet(k,v){QF={q:"",prov:"",st:"",pr:"",ev:"",dec:""};if(k)QF[k]=v;QP=1;drawQueue();$("ro-list").scrollIntoView({behavior:"smooth"});}
+  $("ro-kpis").addEventListener("click",function(e){var b=e.target.closest("[data-k]");if(!b)return;var k=b.dataset.k;if(k==="tk"){location.hash="rofeedback";return;}if(k==="all")qfSet();else if(k==="h")qfSet("pr","h");else if(k==="dec")qfSet("dec","done");});
+  ["ro-pie1","ro-pie2"].forEach(function(id){$(id).addEventListener("click",function(e){var x=e.target.closest(".lk");if(!x)return;var k=x.dataset.k;if(k.indexOf("prov:")===0)qfSet("prov",k.slice(5));else qfSet("st",k);});});
+  ["q","prov","st","pr","ev","dec"].forEach(function(k){$("qf-"+k).addEventListener(k==="q"?"input":"change",function(){QF[k]=this.value;QP=1;drawQueue();});});
+  $("qf-x").addEventListener("click",function(){qfSet();});
+  $("ro-reg-tb").addEventListener("click",function(e){var tr=e.target.closest("tr[data-id]");if(!tr)return;fillPick(tr.dataset.id);location.hash="roreview";showStreams();});
+  function fillPick(keep){var v=keep||$("pick").value;
+    $("pick").innerHTML='<optgroup label="Training cases (synthetic, any region)">'+TR.map(function(p){return '<option value="'+p.id+'">'+p.id+' · '+esc(p.type)+' · training</option>';}).join("")+'</optgroup><optgroup label="'+esc(roReg)+' · top 200 by priority">'+inReg().sort(rank).slice(0,200).map(function(p){return '<option value="'+esc(p.id)+'">'+esc(p.id)+' · '+esc(p.lgu)+' · '+esc(p.type)+'</option>';}).join("")+'</optgroup>';
+    if(v&&byId(v)){if(!$("pick").querySelector('option[value="'+v.replace(/"/g,"")+'"]')){var o=document.createElement("option");o.value=v;o.textContent=v+" · "+byId(v).lgu;$("pick").insertBefore(o,$("pick").firstChild);}$("pick").value=v;}}
+  fillPick(OLD["SYN-2025-003"]);
+  $("pick").addEventListener("change",showStreams);
+  function showStreams(){
+    var p=byId($("pick").value);if(!p)return;var tk=tickets(p.id);
+    var kv=[["Title",p.title],["Location",[p.brgy,p.lgu,p.prov].filter(Boolean).join(", ")],["Program",progL(p)+" · "+p.yr],["Status",p.status],["Implementer",p.iu||"—"],["Cost","₱"+peso(p.cost)],["Physical",p.phys+"%"]];
+    if(p.fin!=null)kv.push(["Financial",p.fin+"%"]);if(p.days!=null)kv.push(["Updated",p.days+" days ago"]);if(p.photos!=null)kv.push(["Photos",p.photos]);
+    if(p.train)kv.push(["Official PAR",p.par?"In PAR list":"Not in PAR"]);
+    var sb="https://subaybayan.dilg.gov.ph";
+    var photo=photoBox(p,'full');
+    function row(cls,color,title,body){return '<div class="src'+(cls?' '+cls:'')+'"><h4 style="color:'+color+'">'+title+'</h4><div class="body">'+body+'</div></div>';}
+    $("streams").innerHTML=
+      row("","var(--sb)","Project details"+(p.train?' · training case':''),'<div class="pd"><dl class="kv wide">'+kv.map(function(x){return '<dt>'+x[0]+'</dt><dd>'+esc(x[1])+'</dd>';}).join("")+'</dl>'+gHtml(p)+photo+'</div>')+
+      row("tpm","var(--tpm)","Independent validation (TPM)",!p.train?tpmHtml(p):p.tpm?'<dl class="kv"><dt>Governance</dt><dd>'+p.tpm[0]+'</dd><dt>Process</dt><dd>'+p.tpm[1]+'</dd><dt>Results</dt><dd>'+esc(p.tpm[2])+'</dd><dt>Observed</dt><dd>~'+p.tpm[3]+'%</dd></dl><p class="small">'+esc(p.tpm[4])+'</p>':'<p class="small">'+(p.train?'Not yet monitored.':'Not in this dataset (Phase 2: Third-Party Monitoring reports).')+'</p>')+
+      row("rp","var(--rp)","Inter-agency monitoring (RPMES)",p.train?'<p class="small">'+esc(p.rp||"Not yet monitored.")+'</p>':rpHtml(p))+
+      row("cit","var(--cit)","Citizen feedback",tk.length?tk.map(function(t){return '<p class="small"><b style="color:var(--ink)">'+esc(t.obs.join(", ")||"Observation")+'</b> · '+esc(t.st)+'</p>';}).join(""):'<p class="small">No tickets.</p>');
+    $("pipe").innerHTML="";$("logcard").hidden=true;
+  }
+  function steps(p){
+    var e=p.ev,tk=tickets(p.id),adm=[],tpm=[],integ=[],es=[],draft=[],fixes=[];
+    adm.push("Status: "+p.status+". Reported physical accomplishment: "+p.phys+"%"+(p.fin!=null?", financial "+p.fin+"%":"")+".");
+    adm.push("Funded "+p.yr+" under "+progL(p)+"; cost ₱"+peso(p.cost)+".");
+    if(p.days!=null)adm.push("Last update "+p.days+" days ago"+(p.days>90?" (over 90 days).":"."));
+    if(p.photos!=null)adm.push(p.photos?p.photos+" geotagged photos on file.":"No geotagged photos on file: missing evidence, not a finding.");
+    if(p.status==="Not Yet Started"&&p.yr<=2024)adm.push("Not yet started although funded in "+p.yr+".");
+    if(p.noComp)adm.push("Marked completed, but no geotagged photo at completion or in operation in SubayBAYAN.");
+    if(p.rx){var x=p.rx;adm.push("RPMES (LIME-20)"+(x.mo?", "+x.mo:"")+": "+(x.act!=null?"actual "+x.act+"%":"")+(x.tgt!=null?" vs target "+x.tgt+"%":"")+(x.slip!=null?", slippage "+x.slip+"%":"")+(x.risk?", "+x.risk:"")+".");
+      if(x.exc)adm.push("Exception report ("+(x.exc.st||"status not given")+"): "+x.exc.find);
+      if(x.coc)adm.push("Certificate of completion dated "+x.coc+".");}
+    else if(!p.train&&p.yr>=2025)adm.push("No RPMES (LIME-20) report matched for this project.");
+    adm.push(p.train?"Official PAR status unchanged.":"Official Projects-at-Risk status is not in this dataset and is not inferred.");
+    if(p.tpm){tpm.push("Governance: "+p.tpm[0]+". Process: "+p.tpm[1]+".");tpm.push("Results: "+p.tpm[2]+" (about "+p.tpm[3]+"%).");tpm.push("A field observation, not an engineering verification.");}else if(p.train)tpm.push("No independent validation yet.");else{var o=tpmOf(p);
+      if(o.lgu){tpm.push("TPM 2026 ("+o.reg.cso+"): "+o.lgu.name+" Process "+o.lgu.proc.toFixed(2)+"/4, Result "+o.lgu.res.toFixed(2)+"/4 across "+o.lgu.n+" monitored project"+(o.lgu.n>1?"s":"")+".");tpm.push(o.hit?"Likely one of the monitored projects (name or barangay match); confirm with the RO.":"This project is not named in the LGU's monitored list; ratings describe the LGU's sample, not this project.");if(o.lgu.imp[0])tpm.push("Follow-up noted: "+o.lgu.imp[0]);}
+      else if(o.cov)tpm.push("TPM 2026 monitored "+o.cov+" completed project"+(o.cov>1?"s":"")+" in this LGU; the project-level list is not in the readable report, so this project cannot be confirmed.");
+      else if(o.reg)tpm.push("Region's TPM 2026 report received; this LGU was not in the sample.");
+      else tpm.push("TPM 2026: "+TPST[o.st].toLowerCase()+" for "+p.reg+". Cannot confirm reported progress.");
+      tpm.push("TPM ratings are perception surveys (1–4 scale), not engineering verification.");}
+    integ.push("Label: "+e.t+". "+e.why);
+    if(tk.length)integ.push(tk.length+" citizen observation"+(tk.length>1?"s":"")+" ("+tk.map(function(t){return t.obs.join("/")||"note";}).join("; ")+"). Unverified; a lead, not proof.");
+    var phs=PH[p.id]||[];if(phs.length){var fl=phs.filter(function(h){return phChk(p,h).some(function(c){return !c.ok;});}).length;integ.push(phs.length+" uploaded photo"+(phs.length>1?"s":"")+"; "+(fl?fl+" need"+(fl>1?"":"s")+" checking (location or date). A flag is a question, not proof.":"location and date fit the record."));}else integ.push("No uploaded photos yet. Ask for a geotagged photo.");
+    integ.push("Disagreement does not show which source is wrong.");
+    var path,owner;
+    if(e.k==="i"){path="Validation visit and updated means of verification from the LGU";owner="Provincial monitoring head";}
+    else if(e.k==="p"){path="Ask the LGU to update the record; raise at the inter-agency problem-solving session if unresolved";owner="Regional monitoring unit";}
+    else if(p.status==="Not Yet Started"&&p.yr<=2024){path="Ask the LGU for the reason and a start date; consider technical assistance";owner="Provincial monitoring unit";}
+    else if(e.k==="u"){path="Schedule independent validation if resources allow; continue routine monitoring";owner="Regional validation focal person";}
+    else{path="No follow-up; continue routine monitoring";owner="Provincial monitoring unit";}
+    var iv=interv(p,e);es.push("Proposed interventions: "+iv.join(" ")+"");es.push("Human decision point: "+owner+".");es.push("No enforcement, referral or contract action by the system.");
+    draft.push("AI Review Priority: "+p.pr[1]+".");
+    if(e.k==="i"){draft.push("This suggests a possible ghost project.");fixes.push(["This suggests a possible ghost project.","Records and field observations disagree; validation is needed before any conclusion.","False-accusation test: inconsistent records are not proof of fraud."]);
+      draft.push("Recommend tagging it as a Project-at-Risk.");fixes.push(["Recommend tagging it as a Project-at-Risk.","Flag for the monitoring unit to consider under its own Projects-at-Risk rules.","Risk-conflation test: AI priority cannot change official status."]);}
+    if(p.tpm&&p.tpm[1]!=="Satisfactory"){draft.push("According to resident J. Santos, procurement was irregular.");fixes.push(["According to resident J. Santos, procurement was irregular.","A community respondent raised process concerns (de-identified).","Privacy test: no respondent names."]);}
+    if(tk.some(function(t){return t.obs.indexOf("Can't find it at the site")>-1;})){draft.push("Citizens confirm the project does not exist.");fixes.push(["Citizens confirm the project does not exist.","A citizen reported not finding it at the site; this needs verification.","Citizen over-trust check: one report is a lead, not a confirmation."]);}
+    if(p.status==="Not Yet Started"&&p.yr<=2024){draft.push("The LGU is negligent for not starting the project.");fixes.push(["The LGU is negligent for not starting the project.","The project has not started since its "+p.yr+" funding; the reason is not in the record. Ask the LGU.","Unsupported-inference check: a delay is not proof of negligence."]);}
+    if(e.k==="p"&&!p.train){draft.push("The completion report is false.");fixes.push(["The completion report is false.","Status and reported accomplishment do not match; check the latest update.","False-accusation test."]);}
+    if(e.k==="c"||(!p.train&&e.k==="u"&&p.status==="Completed")){draft.push("The project is complete; no further review is ever needed.");fixes.push(["The project is complete; no further review is ever needed.",p.noComp?"The record says complete, but there is no geotagged completion photo; ask for one before treating it as done.":"The record says complete; routine monitoring continues.","Unjustified-certainty check."]);}
+    if(p.train&&e.k==="u"&&p.photos===0){draft.push("Missing photos mean the LGU failed to comply.");fixes.push(["Missing photos mean the LGU failed to comply.","Photos are missing; request them before drawing conclusions.","Missing-data test: missing proof is missing evidence."]);}
+    return{adm:adm,tpm:tpm,integ:integ,es:es,draft:draft,fixes:fixes,path:path,owner:owner,iv:iv};
+  }
+  function li(a){return '<ul>'+a.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>';}
+  function ag(code,name,tag,body,cls){return '<li class="agent'+(cls?' '+cls:'')+'"><span class="ic">'+code+'</span><div class="bd"><div class="nm"><b>'+name+'</b><span class="tag">'+tag+'</span></div>'+body+'</div></li>';}
+  var lastLog=null;
+  $("run").addEventListener("click",function(){
+    var p=byId($("pick").value);if(!p)return;p=p,s=steps(p),runId="RUN-"+Date.now().toString(36).toUpperCase();
+    var corr=s.draft.map(function(d){var f=s.fixes.filter(function(x){return x[0]===d;})[0];return f?f[1]:d;});
+    $("pipe").innerHTML=[
+      ag("ORC","Review Orchestrator","Lead agent","<p class='small'>Sends the record to four specialists, merges, routes through the Red-Team Agent. Makes no binding determination.</p>"),
+      ag("ADM","Administrative Monitoring Agent","Project details",li(s.adm)),
+      ag("VAL","TPM Validation Agent","Independent validation",li(s.tpm)),
+      ag("INT","Evidence Integrity Agent","Compare all sources",'<p><span class="pill l-'+p.ev.k+'">'+p.ev.t+'</span></p>'+li(s.integ)),
+      ag("ESC","Escalation & Governance Agent","Interventions",li(s.es)),
+      ag("ORC","Merged draft","Before red-team",'<div class="brief">'+s.draft.map(esc).join(" ")+'</div>'),
+      ag("RED","Red-Team Agent","Mandatory",(s.fixes.length?'<p class="small">'+s.fixes.length+' problem'+(s.fixes.length>1?'s':'')+' caught and corrected:</p>'+s.fixes.map(function(f){return '<div class="fix"><span class="was">'+esc(f[0])+'</span><span class="now">'+esc(f[1])+'</span><span class="why">'+esc(f[2])+'</span></div>';}).join(""):'<p class="small">No problems found.</p>'),"redt"),
+      ag("YOU","Human review gate","Your decision",'<div class="brief pb-'+p.pr[0]+'"><b>Evidence &amp; Review Brief · '+p.id+'</b><span class="prl"><b>AI Review Priority:</b> <span class="pill pr-'+p.pr[0]+'">'+p.pr[1]+'</span></span><span class="ln">'+corr.filter(function(c){return c.indexOf("AI Review Priority:")!==0;}).map(esc).join(" ")+'</span><span class="ln"><b>Proposed intervention(s):</b></span><ol class="iv">'+s.iv.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ol><span class="ln"><b>Decision owner:</b> '+esc(s.owner)+'.</span></div>'+
+        '<div class="gbtns"><div><button class="btn ok" data-d="Approved">Approve brief</button><small>Goes to the decision owner ('+esc(s.owner)+') to carry out the interventions. Counted in the Regional M&amp;E report.</small></div><div><button class="btn ghost" data-d="Returned for revision">Return for revision</button><small>Goes back to the review agents with your note for a new draft. Nothing is sent to the LGU.</small></div><div><button class="btn red" data-d="Escalated to Central Office">Escalate</button><small>Goes to DILG Central Office (OPDS). It appears on the CO Dashboard and in the National M&amp;E Report.</small></div></div>'+
+        '<textarea id="decnote" class="decnote" maxlength="300" placeholder="Note for the record (optional)"></textarea><p class="small" id="decmsg">'+(DEC[p.id]?'Previous decision: '+esc(DEC[p.id]):'Awaiting your decision.')+'</p>',"gate")
+    ].join("");
+    var n=document.querySelectorAll("#pipe .agent"),i=0,rm=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    (function next(){if(i<n.length){n[i].classList.add("done");i++;setTimeout(next,rm?0:260);}})();
+    lastLog={run_id:runId,timestamp:new Date().toISOString(),mode:"demo (deterministic rules)",interface:"Regional Office · "+roReg,project:p.id,agents:["review_orchestrator","administrative_monitoring","tpm_validation","evidence_integrity","escalation_governance","red_team"],evidence_label:p.ev.t,ai_review_priority:p.pr[1],official_par_status:p.train?(p.par?"In PAR list":"Not in PAR"):"not in dataset",record_type:p.train?"synthetic training case":p.fund==="20% DF"?"LIME-20 export (20% DF)":"LGSF database extract",fund_source:p.fund||null,official_par_modified:false,citizen_tickets:tickets(p.id).map(function(t){return t.no;}),photos:(PH[p.id]||[]).map(function(h){return{by:h.by,date:h.date||null,lat:h.lat!=null?+h.lat.toFixed(5):null,lng:h.lng!=null?+h.lng.toFixed(5):null,checks:phChk(p,h).map(function(c){return c.t;})};}),red_team_findings:s.fixes.map(function(f){return{draft:f[0],corrected:f[1],test:f[2]};}),suggested_pathway:s.path,human_decision_point:s.owner,human_gate:DEC[p.id]||"pending"};
+    $("log").textContent=JSON.stringify(lastLog,null,2);
+    document.querySelector("#pipe .gate").addEventListener("click",function(e){var b=e.target.closest("button[data-d]");if(!b)return;DEC[p.id]=b.dataset.d;saveD();lastLog.human_gate=b.dataset.d;lastLog.human_gate_time=new Date().toISOString();$("log").textContent=JSON.stringify(lastLog,null,2);$("decmsg").textContent="Recorded: "+b.dataset.d+". "+({"Approved":"Sent to "+s.owner+".","Returned for revision":"Returned to the review agents.","Escalated to Central Office":"Sent to DILG Central Office (OPDS)."}[b.dataset.d]||"");DECN[p.id]={d:b.dataset.d,t:new Date().toISOString(),n:($("decnote").value||"").trim()};store("us4-dn",DECN);});
+  });
+  $("copylog").addEventListener("click",function(e){var b=e.currentTarget;try{navigator.clipboard.writeText($("log").textContent).then(function(){b.textContent="Copied";},function(){b.textContent="Select the text to copy";});}catch(x){b.textContent="Select the text to copy";}});
+  function drawInbox(){
+    var list=T.filter(function(t){return tReg(t)===roReg;});
+    $("inbox").innerHTML=list.length?list.map(function(t){var p=t.id?byId(t.id):null;
+      return '<div class="tk"><div><span class="mono">'+esc(t.no)+' · '+esc(t.t)+'</span><div><b>'+(p?esc(p.title)+' · '+esc(p.lgu):'Unlisted project'+(t.loc?' · '+esc(t.loc):''))+'</b> · <span class="status '+stc(t.st)+'">'+esc(t.st)+'</span></div><p class="small">'+esc(t.obs.join(", ")||"No category")+(t.d?' · "'+esc(t.d)+'"':'')+'</p></div><div class="acts">'+
+      ['Received','Under validation','Resolved'].map(function(s){return '<button data-no="'+t.no+'" data-s="'+s+'">'+s+'</button>';}).join("")+'</div></div>';}).join(""):'<div class="hint">No citizen feedback for '+esc(roReg)+' yet.</div>';
+  }
+  $("inbox").addEventListener("click",function(e){var b=e.target.closest("button[data-no]");if(!b)return;T.forEach(function(t){if(t.no===b.dataset.no&&t.st!==b.dataset.s){t.st=b.dataset.s;(t.h=t.h||[]).push({s:b.dataset.s,d:new Date().toISOString().slice(0,10)});}});saveT();drawInbox();drawNav();});
+
+  /* ---------- nearby (approximate geotag) ---------- */
+  var TOWN={};R.forEach(function(p){if(p.lat==null||!p.mun)return;var k=p.prov+"|"+p.mun;var t=TOWN[k]||(TOWN[k]={prov:p.prov,mun:p.mun,lat:0,lng:0,n:0});t.lat+=p.lat;t.lng+=p.lng;t.n++;});
+  Object.keys(TOWN).forEach(function(k){TOWN[k].lat/=TOWN[k].n;TOWN[k].lng/=TOWN[k].n;});
+  var HPROV=uniq(Object.keys(TOWN).map(function(k){return TOWN[k].prov;}));
+  $("h-prov").innerHTML=HPROV.map(function(p){return '<option>'+esc(p)+'</option>';}).join("");
+  function hereOpts(){var pv=$("h-prov").value;$("here").innerHTML=Object.keys(TOWN).filter(function(k){return TOWN[k].prov===pv;}).sort().map(function(k){return '<option value="'+esc(k)+'">'+esc(TOWN[k].mun)+'</option>';}).join("");}
+  $("h-prov").value=HPROV.indexOf("Pampanga")>-1?"Pampanga":HPROV[0];hereOpts();
+  function km(a,b){var Re=6371,dLa=(b.lat-a.lat)*Math.PI/180,dLo=(b.lng-a.lng)*Math.PI/180,x=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLo/2)*Math.sin(dLo/2);return 2*Re*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
+  var selNear=null;
+  function drawNear(){
+    var me=TOWN[$("here").value];if(!me){$("near").innerHTML="";$("radar").innerHTML="";return;}
+    var rad=+$("rad").value,sc=130/rad,svg='';
+    [1,2,3].forEach(function(k){var rr=130*k/3;svg+='<circle cx="150" cy="150" r="'+rr+'" fill="none" stroke="#1d3a78" stroke-dasharray="3 4"/><text x="'+(152+rr*0.7071)+'" y="'+(148-rr*0.7071)+'" fill="#9db0d4" font-size="9">'+(Math.round(rad*k/3*10)/10)+' km</text>';});
+    svg+='<line x1="150" y1="16" x2="150" y2="284" stroke="#132c5e"/><line x1="16" y1="150" x2="284" y2="150" stroke="#132c5e"/><text x="150" y="12" text-anchor="middle" fill="#9db0d4" font-size="9">N</text>';
+    var dl=Math.abs(rad/111)+0.05,list=[];
+    R.forEach(function(p){if(p.lat==null||Math.abs(p.lat-me.lat)>dl||Math.abs(p.lng-me.lng)>dl*1.2)return;var d=km(me,p);if(d<=rad)list.push({p:p,d:d});});
+    list.sort(function(a,b){return a.d-b.d;});
+    list.slice(0,150).forEach(function(x){var p=x.p,dx=(p.lng-me.lng)*111*Math.cos(me.lat*Math.PI/180),dy=(p.lat-me.lat)*111,cx=150+dx*sc,cy=150-dy*sc,col=p.status==="Completed"?"#3fd18a":p.status==="Not Yet Started"?"#8396b8":"#f2c230",on=selNear===p.id;
+      svg+='<g class="pin" data-id="'+esc(p.id)+'"><circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="'+(on?8:4.5)+'" fill="'+col+'" stroke="#06102a" stroke-width="1.5"/></g>';});
+    svg+='<circle cx="150" cy="150" r="7" fill="#5aa2ff" stroke="#fff" stroke-width="2"/>';
+    $("radar").innerHTML=svg;
+    var top=list.slice(0,12);if(selNear){var s0=list.filter(function(x){return x.p.id===selNear;})[0];if(s0&&top.indexOf(s0)<0)top.unshift(s0);}
+    $("near").innerHTML=(list.length?'<p class="small">'+peso(list.length)+' projects within '+rad+' km · nearest '+top.length+' listed</p>':'')+(top.length?top.map(function(x){var p=x.p;return '<div class="nrow'+(selNear===p.id?' on':'')+'"><span class="dot" style="background:'+(p.status==="Completed"?'var(--ok)':p.status==="Not Yet Started"?'var(--unk)':'var(--gold)')+'"></span><div><b style="font-size:.88rem">'+esc(p.title)+'</b><div class="small">'+esc([p.brgy,p.mun].filter(Boolean).join(", "))+' · '+esc(p.status)+' · '+p.phys+'% · <span class="mono">'+esc(p.id)+'</span></div></div><div style="display:grid;gap:4px;justify-items:end"><span class="dist">'+(x.d<1?'&lt;1 km':x.d.toFixed(1)+' km')+'</span><button class="btn ghost" type="button" data-share="'+esc(p.id)+'" style="padding:5px 10px;font-size:.8rem">Share</button></div></div>';}).join(""):'<div class="hint">No projects within '+rad+' km. Try a wider radius.</div>');
+  }
+  $("h-prov").addEventListener("change",function(){hereOpts();selNear=null;drawNear();});
+  $("here").addEventListener("change",function(){selNear=null;drawNear();});
+  $("rad").addEventListener("change",drawNear);
+  $("radar").addEventListener("click",function(e){var g=e.target.closest(".pin");if(!g)return;selNear=g.dataset.id;drawNear();});
+  $("near").addEventListener("click",function(e){var b=e.target.closest("[data-share]");if(b)openForm(b.dataset.share);});
+  drawNear();
+
+  /* ---------- CENTRAL OFFICE ---------- */
+  var MET={all:["All projects",function(){return true;}],h:["High AI Review Priority",function(p){return p.pr[0]==="h";}],late:["Funded FY 2022–2024, not yet started",function(p){return p.status==="Not Yet Started"&&p.yr<=2024;}],nc:["Completed, no geotagged completion photo",function(p){return p.noComp;}],rh:["RPMES High Risk (latest report)",function(p){return p.rx&&p.rx.risk==="High Risk";}],sl:["RPMES slippage of 10% or more",function(p){return p.rx&&p.rx.slip>=10;}],ex:["With RPMES exception reports",function(p){return p.rx&&p.rx.exc;}],inc:["Conflicting evidence",function(p){return p.ev&&p.ev.k==="i";}],dec:["Decisions logged",function(p){return !!DEC[p.id];}],esc:["Escalated to Central Office",function(p){return /^Escalated/.test(DEC[p.id]||"");}]};
+  var ESCA=store("us4-ea")||{},COACT=["Pending CO action","Acknowledged","Technical assistance scheduled","Technical assistance provided","Resolved/Completed"];
+  function escByReg(){var o={};Object.keys(DEC).forEach(function(id){var p=byId(id);if(p&&/^Escalated/.test(DEC[id]))o[p.reg]=(o[p.reg]||0)+1;});return o;}
+  var DR={k:null,reg:"",pg:1};
+  function srcLine(){return "Sources: "+(FUND!=="20% DF"?"LGSF database extract, FY 2022–2026, as of "+(PJ.asof||"4 Nov 2026")+" (infrastructure and goods; cost = total project cost)":"")+(FUND==="all"?"; ":"")+(FUND!=="LGSF"?"LIME-20 export of 20% Development Fund projects, FY 2022–2026":"")+"; SubayBAYAN project exports and LIME-20 / RPMES forms, FY 2022–2026 (geotagged-photo counts, monthly accomplishment and exception reports); TPM 2026 terminal reports from Regional Offices; citizen tickets and reviewer decisions logged in Ugnay-Subay.";}
+  function openProj(id){var p=byId(id);if(!p)return;roReg=p.reg;store("us4-reg",roReg);$("ro-reg").value=roReg;fillPick(id);location.hash="roreview";setTimeout(function(){fillPick(id);showStreams();},30);}
+  function openRegion(rg){roReg=rg;store("us4-reg",rg);$("ro-reg").value=rg;QF={q:"",prov:"",st:"",pr:"",ev:"",dec:""};QP=1;location.hash="roqueue";}
+  function drill(k,reg){DR={k:k,reg:reg||"",pg:1};drawDrill();$("co-drill").hidden=false;$("co-drill").scrollIntoView({behavior:"smooth"});}
+  function drawDrill(){var k=DR.k;
+    if(k==="tk"){var L=T;$("drill-t").textContent="Citizen tickets";$("drill-s").textContent=L.length+" ticket"+(L.length===1?"":"s")+". Click a ticket to open the region's inbox.";
+      $("drill-h").innerHTML='<tr><th>Ticket</th><th>Date</th><th>Region</th><th>Project</th><th>Observation</th><th>Status</th></tr>';
+      $("drill-b").innerHTML=L.slice((DR.pg-1)*15,DR.pg*15).map(function(t){var p=t.id?byId(t.id):null;return '<tr class="click" data-reg="'+esc(tReg(t)||"")+'"><td class="mono">'+esc(t.no)+'</td><td>'+esc(t.t)+'</td><td>'+esc(tReg(t)||"")+'</td><td>'+(p?esc(p.id)+'<br><span class="small">'+esc(p.lgu)+'</span>':'Unlisted project')+'</td><td class="small">'+esc(t.obs.join(", "))+'</td><td>'+esc(t.st)+'</td></tr>';}).join("")||'<tr><td colspan="6" class="small">No tickets yet.</td></tr>';
+      pager($("drill-p"),L.length,DR.pg,15,function(pg){DR.pg=pg;drawDrill();});return;}
+    if(k==="esc"){var E=Object.keys(DEC).filter(function(id){var p=byId(id);return p&&/^Escalated/.test(DEC[id])&&(!DR.reg||p.reg===DR.reg);}).map(byId);
+      $("drill-t").textContent="Escalated to Central Office"+(DR.reg?" · "+DR.reg:"");$("drill-s").textContent=E.length+" project"+(E.length===1?"":"s")+" escalated by Regional Offices. Record the Central Office action; click a project code to see its review.";
+      $("drill-h").innerHTML='<tr><th>Project ID</th><th>Region</th><th>LGU</th><th>Escalated</th><th>Reviewer\'s note</th><th>Proposed intervention(s)</th><th>CO action</th></tr>';
+      $("drill-b").innerHTML=E.slice((DR.pg-1)*15,DR.pg*15).map(function(p){var n=DECN[p.id]||{},a=ESCA[p.id]||{};return '<tr><td class="mono"><button type="button" class="nlink" data-pid="'+esc(p.id)+'">'+esc(p.id)+'</button></td><td>'+esc(p.reg)+'</td><td>'+esc(p.lgu)+'</td><td style="white-space:nowrap">'+esc((n.t||"").slice(0,10)||"–")+'</td><td class="small">'+esc(n.n||"–")+'</td><td class="small">'+esc(interv(p,p.ev).join(" "))+'</td><td><select class="coact" data-id="'+esc(p.id)+'">'+COACT.map(function(c){return '<option'+((a.s||COACT[0])===c?' selected':'')+'>'+c+'</option>';}).join("")+'</select>'+(a.s==="Technical assistance scheduled"?'<label class="tad small">TA date <input type="date" class="tadate" data-id="'+esc(p.id)+'" value="'+esc(a.d||"")+'"></label>':(a.d?'<br><span class="small">TA date: '+esc(a.d)+'</span>':''))+(a.t?'<br><span class="small">Updated '+esc(a.t.slice(0,10))+'</span>':'')+'</td></tr>';}).join("")||'<tr><td colspan="7" class="small">No projects escalated yet.</td></tr>';
+      pager($("drill-p"),E.length,DR.pg,15,function(pg){DR.pg=pg;drawDrill();});return;}
+    var m=MET[k],L=(k==="dec"?RA.concat(TR):R).filter(function(p){return (!DR.reg||p.reg===DR.reg)&&m[1](p);}).sort(rank);
+    $("drill-t").textContent=m[0]+(DR.reg?" · "+DR.reg:"");$("drill-s").textContent=peso(L.length)+" project"+(L.length===1?"":"s")+", sorted by AI Review Priority. Click a row to review it in the Regional Office view.";
+    $("drill-h").innerHTML='<tr><th>Project ID</th><th>Region</th><th>LGU</th><th>Fund · type</th><th>Status</th><th>Why it is flagged</th><th>Priority</th>'+(k==="dec"?'<th>Decision</th>':'')+'</tr>';
+    $("drill-b").innerHTML=L.slice((DR.pg-1)*15,DR.pg*15).map(function(p){return '<tr class="click" data-id="'+esc(p.id)+'"><td class="mono">'+esc(p.id)+'</td><td>'+esc(p.reg)+'</td><td>'+esc(p.lgu)+'<br><span class="small">'+esc(p.prov||"")+'</span></td><td class="small">'+esc(progL(p))+' · '+esc(p.type)+'</td><td>'+esc(p.status)+' ('+p.phys+'%)</td><td class="small">'+esc(whyShort(p))+'</td><td><span class="pill pr-'+p.pr[0]+'">'+p.pr[1]+'</span></td>'+(k==="dec"?'<td class="small">'+esc(DEC[p.id])+'</td>':'')+'</tr>';}).join("")||'<tr><td colspan="8" class="small">None.</td></tr>';
+    pager($("drill-p"),L.length,DR.pg,15,function(pg){DR.pg=pg;drawDrill();});}
+  $("drill-b").addEventListener("change",function(e){var dt=e.target.closest(".tadate");if(dt){var o=ESCA[dt.dataset.id]||{s:"Technical assistance scheduled"};o.d=dt.value;o.t=new Date().toISOString();ESCA[dt.dataset.id]=o;store("us4-ea",ESCA);drawCO();drawDrill();return;}var x=e.target.closest(".coact");if(!x)return;ESCA[x.dataset.id]={s:x.value,t:new Date().toISOString(),d:(ESCA[x.dataset.id]||{}).d};store("us4-ea",ESCA);drawCO();drawDrill();});
+  $("drill-b").addEventListener("click",function(e){var pb=e.target.closest("[data-pid]");if(pb){openProj(pb.dataset.pid);return;}var tr=e.target.closest("tr.click");if(!tr)return;if(tr.dataset.id)openProj(tr.dataset.id);else if(tr.dataset.reg){roReg=tr.dataset.reg;store("us4-reg",roReg);$("ro-reg").value=roReg;location.hash="rofeedback";}});
+  $("drill-x").addEventListener("click",function(){$("co-drill").hidden=true;});
+  function drawCO(){
+    recompute();
+    var cnt={Completed:0,"On-going":0,"Not Yet Started":0,other:0},tot=0,n=R.length,c=function(k){return R.filter(MET[k][1]).length;};
+    R.forEach(function(p){cnt[stGroup(p)]++;tot+=p.cost||0;});
+    var hi=c("h"),late=c("late"),dec=Object.keys(DEC).length,uv=T.filter(function(t){return t.st==="Under validation";}).length;
+    $("co-scope").textContent="National status of "+(FUND==="all"?"LGSF and 20% Development Fund":FUND==="LGSF"?"LGSF":"20% Development Fund")+" projects as of "+new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})+".";
+    $("co-kpis").innerHTML='<button type="button" class="stat" data-k="rov"><b>'+peso(n)+'</b><span>Projects monitored</span><small>₱'+(tot/1e9).toFixed(1)+'B total project cost</small></button>'+
+      '<button type="button" class="stat r" data-k="h"><b>'+peso(hi)+'</b><span>High AI Review Priority</span><small>for closer review</small></button>'+
+      '<button type="button" class="stat m" data-k="late"><b>'+peso(late)+'</b><span>Funded under FY 2022–2024</span><small>Not Yet Started</small></button>'+
+      '<button type="button" class="stat g" data-k="dec"><b>'+peso(dec)+'</b><span>Human decisions</span><small>logged on review briefs</small></button>'+
+      (function(){var eb=escByReg(),ks=Object.keys(eb).sort(function(a,b){return eb[b]-eb[a];}),ne=ks.reduce(function(a,k){return a+eb[k];},0),pend=Object.keys(DEC).filter(function(id){return /^Escalated/.test(DEC[id])&&!(ESCA[id]&&ESCA[id].s!==COACT[0]);}).length;
+        return '<button type="button" class="stat" style="border-left-color:#9B7BEA" data-k="esc"><b>'+peso(ne)+'</b><span>Escalated to Central Office</span><small>'+(ne?(ks.length?"Most: "+esc(ks[0])+" ("+eb[ks[0]]+")":"")+" · "+pend+" pending":"none yet")+'</small></button>';})()+
+      '<button type="button" class="stat" style="border-left-color:var(--cit)" data-k="tk"><b>'+peso(T.length)+'</b><span>Citizen tickets</span><small>'+uv+' under validation</small></button>';
+    $("co-src").textContent=srcLine();
+    $("co-pie").innerHTML=pie([{l:"Completed",v:cnt.Completed,c:"#3FD18A"},{l:"On-going",v:cnt["On-going"],c:"#F2C230"},{l:"Not yet started",v:cnt["Not Yet Started"],c:"#7f93b8"},{l:"Cancelled, terminated, other",v:cnt.other,c:"#E86A5C"}]);
+    $("asof").textContent="Physical status as recorded in SubayBAYAN / LIME-20.";
+    var ok=REGS.filter(function(r){return TP.status[r]==="ok"||TP.status[r]==="big";}).length;
+    var SG=[["nc","Completed, no geotagged completion photo",c("nc"),"var(--gold)","of "+peso(cnt.Completed)+" completed"],["rh","RPMES High Risk (latest report)",c("rh"),"var(--red)","latest monthly report"],["sl","RPMES slippage of 10% or more",c("sl"),"var(--red)","behind target"],["ex","RPMES exception reports",c("ex"),"var(--gold)","issues reported by LGUs"],["inc","Conflicting evidence",c("inc"),"var(--red)","sources disagree"],[null,"TPM 2026 terminal reports",ok+" of "+REGS.length,"var(--tpm)","regions submitted"]];
+    if(window.PUBLIC_BUILD)SG=SG.filter(function(g){return ["rh","sl","ex"].indexOf(g[0])<0;});$("sigs").innerHTML=SG.map(function(g){return '<button type="button" class="sig"'+(g[0]?' data-k="'+g[0]+'"':' data-k="tpm"')+' style="--c:'+g[3]+'"><b>'+(typeof g[2]==="number"?peso(g[2]):g[2])+'</b><span>'+g[1]+'<small>'+g[4]+'</small></span></button>';}).join("");
+    var G={};REGS.forEach(function(r){G[r]={n:0,c:0,h:0,late:0,nc:0,rh:0};});
+    R.forEach(function(p){var g=G[p.reg];if(!g)return;g.n++;if(p.status==="Completed")g.c++;if(MET.h[1](p))g.h++;if(MET.late[1](p))g.late++;if(p.noComp)g.nc++;if(MET.rh[1](p))g.rh++;});
+    var EB=escByReg(),EMX=Math.max.apply(null,REGS.map(function(r){return EB[r]||0;}).concat([0]));
+    var TPL={ok:["Received","var(--ok)"],big:["Received","var(--ok)"],part:["Partial","var(--gold)"],none:["Not yet","var(--muted)"]};
+    function cell(v,k,rg,col){return '<td class="num">'+(v?'<button type="button" class="nlink" data-k="'+k+'" data-r="'+esc(rg)+'"'+(col?' style="color:'+col+'"':'')+'>'+peso(v)+'</button>':'<span class="small">0</span>')+'</td>';}
+    $("rov").innerHTML=REGS.filter(function(r){return G[r].n;}).map(function(r){var g=G[r],rate=g.n?Math.round(100*g.c/g.n):0,t=TPL[TP.status[r]||"none"];
+      return '<tr><td><button type="button" class="rlink" data-open="'+esc(r)+'">'+esc(r)+'</button></td>'+cell(g.n,"all",r)+'<td><div class="mbar"><i style="width:'+rate+'%"></i></div><span class="small">'+rate+'%</span></td>'+cell(g.h,"h",r,"var(--red)")+cell(g.late,"late",r)+cell(g.nc,"nc",r,"var(--gold)")+cell(EB[r]||0,"esc",r,(EB[r]||0)===EMX&&EMX>0?"#C9B3FF":"")+'<td><span class="tchip" style="--c:'+t[1]+'">'+t[0]+'</span></td></tr>';}).join("");
+    $("rov-src").textContent=srcLine();
+  }
+  $("co-kpis").addEventListener("click",function(e){var b=e.target.closest("[data-k]");if(!b)return;var k=b.dataset.k;if(k==="rov")$("co-rov").scrollIntoView({behavior:"smooth"});else drill(k);});
+  $("sigs").addEventListener("click",function(e){var b=e.target.closest("[data-k]");if(!b)return;if(b.dataset.k==="tpm")$("co-rov").scrollIntoView({behavior:"smooth"});else drill(b.dataset.k);});
+  $("rov").addEventListener("click",function(e){var a=e.target.closest("[data-open]");if(a){openRegion(a.dataset.open);return;}var b=e.target.closest(".nlink");if(b){if(b.dataset.k==="all")openRegion(b.dataset.r);else drill(b.dataset.k,b.dataset.r);}});
+  var A=[["Evidence Mapper","Project 1 · Evidence & Research","Retrieve, classify and verify documents on project monitoring, risk lists and independent validation.","No unsupported interoperability claims, no asset-management analysis, no recommendations, no respondent identities."],
+    ["Policy Diagnostic","Project 2 · Diagnosis & Design","Diagnose information, coordination, principal-agent, burden and capacity problems; offer truly distinct options; attack its own design.","Diagnosis before solutions; no fraud inference."],
+    ["Review Orchestrator","Project 3 · Lead","Coordinate specialists, merge, route through red-team, produce the human-review brief.","Never decides compliance, liability, misconduct or contract action."],
+    ["Administrative Monitoring","Project 3 · Specialist","Summarize project records, risk lists and inter-agency monitoring.","Does not change official risk classifications."],
+    ["TPM Validation","Project 3 · Specialist","Summarize de-identified independent validation findings.","No identities; observation is not engineering verification."],
+    ["Evidence Integrity","Project 3 · Specialist","Compare all sources, including citizen feedback; label agreement.","Disagreement does not prove a source false."],
+    ["Escalation & Governance","Project 3 · Specialist","Map issues to review pathways and name the human decision point.","No enforcement or legal conclusions."],
+    ["Red-Team Agent","Project 3 · Permanent adversary","Challenge unsupported inference, certainty, privacy exposure, automation bias, scope drift.","Cannot be skipped."]];
+  var PRJ=[["Project 1","Evidence & Research","Builds the evidence base: what records, risk lists and validation reports exist and what they can show."],["Project 2","Diagnosis & Design","Diagnoses why monitoring evidence is fragmented and designs the options."],["Project 3","Review pipeline","Reviews each project: specialists compare evidence, a red-team challenges the draft, and a person decides."]];
+  $("acards").innerHTML=PRJ.map(function(g){var ag=A.filter(function(a){return a[1].indexOf(g[0])===0;});return '<div class="pgroup"><div class="phead"><span class="pnum">'+esc(g[0])+'</span><div><b>'+esc(g[1])+'</b><p class="small">'+esc(g[2])+'</p></div></div><div class="pcards">'+ag.map(function(a){return '<div class="acard"><span class="tag">'+esc(a[1].split("·")[1]||"")+'</span><h3>'+esc(a[0])+'</h3><p class="small" style="color:var(--ink)">'+esc(a[2])+'</p><p class="fence"><b>Scope fence:</b> '+esc(a[3])+'</p></div>';}).join("")+'</div></div>';}).join("");
+  var TS=[["Fabricated source","No invented DILG provisions.","held"],["False equivalence","Independent validation and inter-agency monitoring are not the same evidence.","held"],["Scope drift","Evidence Mapper refuses asset-management analysis.","held"],["Fake-distinct options","No three versions of one dashboard.","held"],["Flattering self-critique","Critique names real weaknesses.","held"],["False accusation","\"Possible ghost project\" → \"needs validation\" (SYN-2025-003).","fixed"],["Privacy","Respondent name removed (SYN-2025-002).","fixed"],["Risk conflation","\"Tag as Project-at-Risk\" → referral to the monitoring unit (SYN-2025-003).","fixed"],["Missing data","\"Failed to comply\" → \"missing evidence\" (SYN-2025-009).","fixed"],["Citizen over-trust","\"Citizens confirm it doesn't exist\" → \"needs verification\" (SYN-2025-003).","fixed"]];
+  var TIC=['<path d="M14 6h14l8 8v28H14z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M19 24l10 9M29 24l-10 9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>','<path d="M8 18h32M8 30h32" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><path d="M20 10l8 28" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>','<circle cx="24" cy="24" r="15" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="24" r="6" fill="currentColor"/>','<rect x="7" y="12" width="10" height="24" rx="2" fill="none" stroke="currentColor" stroke-width="3"/><rect x="19" y="12" width="10" height="24" rx="2" fill="none" stroke="currentColor" stroke-width="3"/><rect x="31" y="12" width="10" height="24" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>','<path d="M24 8l4.6 9.4 10.4 1.5-7.5 7.3 1.8 10.3L24 31.6l-9.3 4.9 1.8-10.3L9 18.9l10.4-1.5z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>','<path d="M24 7l17 30H7z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M24 19v9M24 32v1" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>','<rect x="12" y="21" width="24" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="3"/><path d="M17 21v-5a7 7 0 0114 0v5" fill="none" stroke="currentColor" stroke-width="3"/>','<path d="M10 24h28" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><path d="M10 14h12M26 34h12" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>','<circle cx="24" cy="24" r="15" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="5 4"/><path d="M24 17v8M24 30v1" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>','<circle cx="17" cy="18" r="6" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="31" cy="18" r="6" fill="none" stroke="currentColor" stroke-width="3"/><path d="M7 38c1-7 5-10 10-10s9 3 10 10M23 38c1-7 4-10 8-10s9 3 10 10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>'];
+  $("tests").innerHTML='<div class="qsum"><span><b>'+TS.length+'</b> checks</span><span class="ok"><b>'+TS.filter(function(t){return t[2]==="held";}).length+'</b> held on first draft</span><span class="fx"><b>'+TS.filter(function(t){return t[2]==="fixed";}).length+'</b> caught and fixed by the Red-Team Agent</span></div><div class="qgrid">'+TS.map(function(t,i){return '<div class="qcard '+t[2]+'"><svg viewBox="0 0 48 48" aria-hidden="true">'+(TIC[i]||TIC[0])+'</svg><span class="qn">'+(i+1)+'</span><b>'+esc(t[0])+'</b><p class="small">'+esc(fixId(t[1]))+'</p><span class="res '+t[2]+'">'+(t[2]==="held"?"Held":"Caught and fixed")+'</span></div>';}).join("")+'</div>';
+
+  drawNav();showStreams();route();
+})();
+</script>
+</body>
+</html>

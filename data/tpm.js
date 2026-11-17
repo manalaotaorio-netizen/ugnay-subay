@@ -1,0 +1,1 @@
+window.TPM={"asof":"9 Nov 2026","status":{"Region 2":"none","Region 4A":"none","Region 5":"none","Region 7":"none","Region 9":"none","Region 11":"none","CARAGA":"none","NCR":"none","CAR":"none","NIR":"none","MIMAROPA":"none","Region 8":"ok","Region 10":"ok","Region 12":"ok","Region 1":"big","Region 3":"part","Region 6":"part"},"reg":{},"lgu":{},"cover":{}};
