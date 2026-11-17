@@ -541,7 +541,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
   var TP=window.TPM||{status:{},reg:{},lgu:{},cover:{}};
   function nk(x){return String(x||"").toLowerCase().replace(/\bcity of\b|\bcity\b/g,"").replace(/[^a-z]/g,"");}
   var GEN={"farm-to-market":1,"multi-purpose":1,"new":1};
-  function tpmOf(p){var o={st:TP.status[p.reg]||"none",reg:TP.reg[p.reg]||null,lgu:TP.lgu[p.reg+"|"+nk(p.mun)]||null,cov:TP.cover[p.reg+"|"+nk(p.mun)]||(!p.mun&&/camiguin/i.test(p.prov||"")?TP.cover[p.reg+"|@camiguin"]:0)};
+  function tpmOf(p){var o={st:TP.status[p.reg]||"none",reg:TP.reg[p.reg]||null,lgu:TP.lgu[p.reg+"|"+nk(p.mun)]||null,ex:!!(TP.ids&&TP.ids[p.id]),cov:TP.cover[p.reg+"|"+nk(p.prov)+"/"+nk(p.mun)]||TP.cover[p.reg+"|"+nk(p.mun)]||(!p.mun&&/camiguin/i.test(p.prov||"")?TP.cover[p.reg+"|@camiguin"]:0)};
     if(o.lgu&&p.status==="Completed"){var h=((p.brgy||"")+" "+(p.title||"")).toLowerCase();o.hit=o.lgu.tok.some(function(t){return !GEN[t]&&h.indexOf(t)>-1;});}
     return o;}
   R.forEach(function(p){var o=tpmOf(p);p.tpmHit=!!o.hit;p.tpmL=o.lgu;});
@@ -697,9 +697,9 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
     if(cL>=0||T0.df25){A({t:"pb"});hd("Delayed starts");if(cL>=0)A({t:"fig",i:cL});
       if(T0.df25)A({t:"p",text:"20% Development Fund, FY 2025: <b>"+fmt(T0.df25n)+" of "+fmt(T0.df25)+"</b> projects ("+pct(T0.df25n,T0.df25)+"%) are reported as not yet started. Validate with LGUs whether these are real delays or records not yet updated."});}
     A({t:"pb"});hd("Independent validation (TPM 2026)");if(cT>=0)A({t:"fig",i:cT});
-    var regs=byReg?Object.keys(TP.reg):Object.keys(TP.reg).filter(function(r){return r===region;});
+    var regs=(byReg?Object.keys(TP.reg):Object.keys(TP.reg).filter(function(r){return r===region;})).sort(function(a,b){return REGS.indexOf(a)-REGS.indexOf(b);});
     if(regs.length){A({t:"tbl",w:[11,22,9,9,9,30],head:["Region","Monitor (CSO)","Projects","Process","Result","Main issue"],num:[0,0,1,1,1,0],rows:regs.map(function(r){var x=TP.reg[r];return [r,x.cso,String(x.n),x.proc?x.proc.toFixed(2):"–",x.res?x.res.toFixed(2):"–",x.issue[0]];})});
-      A({t:"note",text:"Ratings on a 1–4 scale from beneficiary and stakeholder surveys; not engineering verification."});
+      A({t:"note",text:"Ratings on a 1–4 scale from beneficiary and stakeholder surveys; not engineering verification. “–” means the report gives scores by program or indicator only, with no single overall score."});
       var low=Object.keys(TP.lgu).map(function(k){return TP.lgu[k];}).filter(function(l){return l.res<3&&(!region||region==="Region 12");}).sort(function(a,b){return a.res-b.res;});
       if(low.length)A({t:"p",text:"<b>LGUs with a TPM Result rating below 3:</b> "+low.map(function(l){return l.name+" ("+l.res.toFixed(2)+")";}).join(", ")+". Their follow-up items should be checked with the Regional Office."});}
     else A({t:"p",text:"No TPM 2026 terminal report has been received for "+region+" yet."});
@@ -876,7 +876,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
     if(o.lgu){var L=o.lgu;h='<dl class="kv"><dt>Monitor</dt><dd>'+esc(o.reg.cso)+' · TPM 2026</dd><dt>'+esc(L.name)+'</dt><dd>Process '+L.proc.toFixed(2)+'/4 · Result '+L.res.toFixed(2)+'/4 · '+L.n+' project'+(L.n>1?'s':'')+', '+L.resp+' respondents</dd>'+(L.projects?'<dt>Monitored</dt><dd>'+esc(L.projects)+'</dd>':'')+'</dl>'+
       '<p class="small"><b style="color:'+(o.hit?'var(--ok)':'var(--gold)')+'">'+(o.hit?'✓ Likely one of the monitored projects (name or barangay matches the report). Confirm with the RO.':'This project is not named in the monitored list; ratings are for the LGU sample.')+'</b></p>'+
       (L.pos[0]?'<p class="small"><b style="color:var(--ok)">Positive:</b> '+esc(L.pos[0])+'</p>':'')+(L.imp[0]?'<p class="small"><b style="color:var(--gold)">Follow-up:</b> '+esc(L.imp[0])+'</p>':'');}
-    else if(o.cov)h='<p class="small">'+esc(o.reg.cso)+' monitored <b style="color:var(--ink)">'+o.cov+'</b> completed project'+(o.cov>1?'s':'')+' in this LGU (TPM 2026). The project-level list is not in the readable report, so this project can\'t be confirmed yet.</p>';
+    else if(o.ex)h='<p class="small"><b style="color:var(--ok)">On the TPM 2026 monitored list</b> (matched by project code). '+esc(o.reg.cso)+' visited this project; see the regional findings in the TPM report.</p>';     else if(o.cov)h='<p class="small">'+esc(o.reg.cso)+' monitored <b style="color:var(--ink)">'+o.cov+'</b> completed project'+(o.cov>1?'s':'')+' in this LGU (TPM 2026). The project-level list is not in the readable report, so this project can\'t be confirmed yet.</p>';
     else if(o.reg)h='<p class="small">'+esc(p.reg)+' submitted its TPM 2026 report ('+esc(o.reg.cso)+'); this LGU was not in the sample.</p>';
     else h='<p class="small">TPM 2026 for '+esc(p.reg)+': '+TPST[o.st]+'.</p>';
     if(TP.url&&TP.url[p.reg])h+='<p class="small"><a class="tplink" href="'+TP.url[p.reg]+'">📄 Open the '+esc(p.reg)+' TPM 2026 '+(o.st==="part"?"submission folder":"terminal report")+' ↗</a> <span>(Google Drive; DILG access needed)</span></p>';
@@ -1028,7 +1028,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
     adm.push(p.train?"Official PAR status unchanged.":"Official Projects-at-Risk status is not in this dataset and is not inferred.");
     if(p.tpm){tpm.push("Governance: "+p.tpm[0]+". Process: "+p.tpm[1]+".");tpm.push("Results: "+p.tpm[2]+" (about "+p.tpm[3]+"%).");tpm.push("A field observation, not an engineering verification.");}else if(p.train)tpm.push("No independent validation yet.");else{var o=tpmOf(p);
       if(o.lgu){tpm.push("TPM 2026 ("+o.reg.cso+"): "+o.lgu.name+" Process "+o.lgu.proc.toFixed(2)+"/4, Result "+o.lgu.res.toFixed(2)+"/4 across "+o.lgu.n+" monitored project"+(o.lgu.n>1?"s":"")+".");tpm.push(o.hit?"Likely one of the monitored projects (name or barangay match); confirm with the RO.":"This project is not named in the LGU's monitored list; ratings describe the LGU's sample, not this project.");if(o.lgu.imp[0])tpm.push("Follow-up noted: "+o.lgu.imp[0]);}
-      else if(o.cov)tpm.push("TPM 2026 monitored "+o.cov+" completed project"+(o.cov>1?"s":"")+" in this LGU; the project-level list is not in the readable report, so this project cannot be confirmed.");
+      else if(o.ex)tpm.push("On the TPM 2026 monitored list (matched by project code); see the regional TPM findings.");       else if(o.cov)tpm.push("TPM 2026 monitored "+o.cov+" completed project"+(o.cov>1?"s":"")+" in this LGU; the project-level list is not in the readable report, so this project cannot be confirmed.");
       else if(o.reg)tpm.push("Region's TPM 2026 report received; this LGU was not in the sample.");
       else tpm.push("TPM 2026: "+TPST[o.st].toLowerCase()+" for "+p.reg+". Cannot confirm reported progress.");
       tpm.push("TPM ratings are perception surveys (1–4 scale), not engineering verification.");}
