@@ -553,11 +553,15 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
   function byId(id){return IDX[id];}
   var ORDER=["NCR","CAR","Region 1","Region 2","Region 3","Region 4A","MIMAROPA","Region 5","Region 6","NIR","Region 7","Region 8","Region 9","Region 10","Region 11","Region 12","CARAGA","BARMM"];
   var REGS=ORDER.filter(function(r){return (PJ.dict.reg||[]).indexOf(r)>-1;});
+  var MON={january:1,february:2,march:3,april:4,may:5,june:6,july:7,august:8,september:9,october:10,november:11,december:12};
+  function rxYm(x){var m=x&&x.mo&&x.mo.toLowerCase().match(/([a-z]+)\D*(\d{4})/);return m&&MON[m[1]]?m[2]+"-"+("0"+MON[m[1]]).slice(-2):null;}
+  function rxStale(x){var ym=rxYm(x);return !!(x&&x.coc&&ym&&x.coc.slice(0,7)>ym);}
   function realEval(p){
     var tk=T.filter(function(t){return t.id===p.id;}),neg=tk.some(function(t){return t.obs.some(function(o){return /stopped|Not what|Can't find|Quality/.test(o);});}),pos=tk.some(function(t){return t.obs.indexOf("Looks complete and in use")>-1;});
     var mism=(p.status==="Completed"&&p.phys<100)||(p.phys>=100&&p.status!=="Completed"&&p.status!=="Cancelled"&&p.status!=="Terminated");
     var e;
     if(neg&&(p.status==="Completed"||p.phys>=90))e={k:"i",t:"Inconsistent",why:"Record says "+p.status.toLowerCase()+" ("+p.phys+"%), but a citizen reported a problem on site (unverified)."};
+    else if(p.status==="Completed"&&p.rx&&p.rx.act!=null&&p.rx.act<90&&rxStale(p.rx))e={k:"p",t:"Partially Consistent",why:"The latest RPMES monthly report ("+p.rx.mo+", "+p.rx.act+"%) predates the certificate of completion ("+p.rx.coc+"). The RPMES record was not updated after completion; confirm and update."};
     else if(p.status==="Completed"&&p.rx&&p.rx.act!=null&&p.rx.act<90)e={k:"i",t:"Inconsistent",why:"SubayBAYAN says completed, but the latest RPMES report"+(p.rx.mo?" ("+p.rx.mo+")":"")+" shows "+p.rx.act+"% actual accomplishment."};
     else if(mism)e={k:"p",t:"Partially Consistent",why:"Status ("+p.status+") and reported accomplishment ("+p.phys+"%) do not match."};
     else if(p.status==="Completed"&&p.rx&&p.rx.risk==="High Risk")e={k:"p",t:"Partially Consistent",why:"SubayBAYAN says completed, but the latest RPMES report still rates it High Risk."};
@@ -855,7 +859,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
     var rc=x.risk==="High Risk"?"var(--red)":/Moderate|Low/.test(x.risk||"")?"var(--gold)":"var(--ok)";
     var h='<dl class="kv">'+(x.mo?'<dt>Latest report</dt><dd>'+esc(x.mo)+'</dd>':'')+(x.act!=null?'<dt>Accomplishment</dt><dd>'+x.act+'% actual'+(x.tgt!=null?' vs '+x.tgt+'% target':'')+'</dd>':'')+(x.slip!=null?'<dt>Slippage</dt><dd>'+x.slip+'%</dd>':'')+(x.risk?'<dt>Risk level</dt><dd><b style="color:'+rc+'">'+esc(x.risk)+'</b></dd>':'')+(x.coc?'<dt>Completion</dt><dd>Certificate dated '+x.coc+'</dd>':'')+'</dl>';
     if(x.exc)h+='<p class="small"><b style="color:var(--gold)">Exception report ('+esc(x.exc.st||'status not given')+'):</b> '+esc(x.exc.find)+(x.exc.act?' <i>Action: '+esc(x.exc.act)+'</i>':'')+'</p>';
-    if(x.res)h+='<p class="small"><b style="color:var(--ok)">Observed result:</b> '+esc(x.res)+'</p>';
+    if(x.res&&/[a-z]{3}/i.test(x.res))h+='<p class="small"><b style="color:var(--ok)">Observed result:</b> '+esc(x.res)+'</p>';
     return h+'<p class="small">Source: LIME-20 / RPMES forms (FY 2022–2026 export).</p>';}
   function interv(p,e){var a=[],tk=tickets(p.id).filter(function(t){return t.st!=="Resolved";}).length;
     if(e.k==="i")a.push("Conduct a validation visit and ask the LGU for updated means of verification (geotagged photos, certificate of completion).");
@@ -1040,7 +1044,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
     else{path="No follow-up; continue routine monitoring";owner="Provincial monitoring unit";}
     var iv=interv(p,e);es.push("Proposed interventions: "+iv.join(" ")+"");es.push("Human decision point: "+owner+".");es.push("No enforcement, referral or contract action by the system.");
     draft.push("AI Review Priority: "+p.pr[1]+".");
-    if(e.k==="i"){draft.push("This suggests a possible ghost project.");fixes.push(["This suggests a possible ghost project.","Records and field observations disagree; validation is needed before any conclusion.","False-accusation test: inconsistent records are not proof of fraud."]);
+    if(e.k==="i"){draft.push("This suggests a possible ghost project.");fixes.push(["This suggests a possible ghost project.","The sources disagree; validation is needed before any conclusion.","False-accusation test: inconsistent records are not proof of fraud."]);
       draft.push("Recommend tagging it as a Project-at-Risk.");fixes.push(["Recommend tagging it as a Project-at-Risk.","Flag for the monitoring unit to consider under its own Projects-at-Risk rules.","Risk-conflation test: AI priority cannot change official status."]);}
     if(p.tpm&&p.tpm[1]!=="Satisfactory"){draft.push("According to resident J. Santos, procurement was irregular.");fixes.push(["According to resident J. Santos, procurement was irregular.","A community respondent raised process concerns (de-identified).","Privacy test: no respondent names."]);}
     if(tk.some(function(t){return t.obs.indexOf("Can't find it at the site")>-1;})){draft.push("Citizens confirm the project does not exist.");fixes.push(["Citizens confirm the project does not exist.","A citizen reported not finding it at the site; this needs verification.","Citizen over-trust check: one report is a lead, not a confirmation."]);}
