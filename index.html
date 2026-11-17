@@ -289,7 +289,7 @@ body.co-bg .hero.co{background:linear-gradient(0deg,rgba(6,16,42,.7) 0%,rgba(6,1
 body.co-bg .dhead h2,body.co-bg .dhead p,body.co-bg p.srcn,body.co-bg .sech{text-shadow:0 1px 3px rgba(0,0,0,.6)}
 body.ro-bg,body.pub-bg{background:transparent!important}
 body.ro-bg::before,body.pub-bg::before{content:"";position:fixed;inset:0;z-index:-1}
-body.ro-bg::before{background:linear-gradient(rgba(6,16,42,.8),rgba(6,16,42,.88)),url(img/ro.jpg) center top/cover no-repeat,url(img/ro-web.jpg) center 30%/cover no-repeat,#0b2257}
+body.ro-bg::before{background:linear-gradient(rgba(6,16,42,.8),rgba(6,16,42,.88)),url(img/ro-web.jpg) center 30%/cover no-repeat,#0b2257}
 body.pub-bg::before{background:linear-gradient(rgba(6,16,42,.78),rgba(6,16,42,.88)),url(img/hero.jpg) center 40%/cover no-repeat,#0b2257}
 body.ro-bg .robanner{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-radius:0;border:0}
 body.ro-bg .robanner.fb{min-height:clamp(340px,56vh,600px);background:linear-gradient(0deg,rgba(6,16,42,.6) 0%,rgba(6,16,42,0) 25%),url(img/ro-web.jpg) center 30%/cover no-repeat fixed,#0b2257}
@@ -306,8 +306,8 @@ body.ro-bg #ro-title,body.ro-bg #v-roqueue>.btnrow p,body.pub-bg h2,body.pub-bg 
 .rodash{display:grid;gap:16px;grid-template-columns:minmax(300px,1fr) 2fr;align-items:stretch}@media (max-width:980px){.rodash{grid-template-columns:1fr}}
 .pvt .rlink{white-space:nowrap;text-align:left}.pvt{max-height:380px}
 .rodash .pie{flex-direction:column}
-.card.light .btn:not(.ghost):not(.ok):not(.red){background:#F2C230;color:#0B2A6B;border-color:#F2C230;box-shadow:0 2px 8px rgba(242,194,48,.35)}.card.light .btn:not(.ghost):not(.ok):not(.red):hover{background:#FFD24D}
 a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tplink{color:var(--blue);font-weight:700}
+.card.light .btn:not(.ghost):not(.ok):not(.red){background:#F2C230;color:#0B2A6B;border-color:#F2C230;box-shadow:0 2px 8px rgba(242,194,48,.35)}.card.light .btn:not(.ghost):not(.ok):not(.red):hover{background:#FFD24D}
 </style>
 </head>
 <body>
@@ -323,7 +323,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
   <div class="viewas"><label for="role">View as</label><select id="role"><option value="co">DILG Central Office</option><option value="ro">DILG Regional Office</option><option value="pub">Public</option></select><label for="fund" class="fundc">Fund</label><select id="fund" class="fundc"><option value="all">All sources</option><option value="LGSF">LGSF</option><option value="20% DF">20% DF (LIME-20)</option></select></div>
 </div></div></div>
 <div class="navbar"><div class="wrap"><nav id="nav" aria-label="Sections"></nav><span class="slash" aria-hidden="true"></span></div></div>
-<div class="crumb"><div class="wrap"><span id="crumb"></span><span class="demo">● PUBLIC DEMO · NOT AN OFFICIAL DILG SYSTEM</span></div></div>
+<div class="crumb"><div class="wrap"><span id="crumb"></span><span class="demo">● PROTOTYPE · NOT AN OFFICIAL DILG SYSTEM</span></div></div>
 
 <main><div class="wrap">
 
@@ -412,7 +412,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
     <div class="card cen"><h3>Physical status</h3><div id="co-pie"></div><p class="srcn" id="asof"></p></div>
     <div class="card"><h3>Evidence and risk signals</h3><div class="sigs" id="sigs"></div><p class="srcn">Click a signal to see the projects. Signals are reasons to check, not findings.</p></div>
   </div>
-  <div class="card" id="co-rov"><h3>Regional overview</h3><p class="small">Click a region to open its Regional Office view, or a number to see the projects. Many escalations from one region may point to gaps in regional capacity; check before concluding.</p><div class="tablewrap"><table class="rov"><thead><tr><th>Region</th><th>Projects</th><th>Completion rate</th><th>High AI Review Priority</th><th>Funded FY 2022–2024, not yet started</th><th>Completed, no completion photo</th><th>Escalated to CO</th><th>TPM 2026 report</th></tr></thead><tbody id="rov"></tbody></table></div><p class="srcn" id="rov-src"></p></div>
+  <div class="card" id="co-rov"><h3>Regional overview</h3><p class="small">Click a region to open its Regional Office view, or a number to see the projects. Many escalations from one region may point to gaps in regional capacity; check before concluding.</p><div class="tablewrap"><table class="rov"><thead><tr><th>Region</th><th>Projects</th><th>Completion rate</th><th>High AI Review Priority</th><th>Funded FY 2022–2024, not yet started</th><th>Completed, no completion photo</th><th>RPMES High Risk</th><th>Escalated to CO</th><th>TPM 2026 report</th></tr></thead><tbody id="rov"></tbody></table></div><p class="srcn" id="rov-src"></p></div>
 </section>
 
 <!-- CO: AGENTS -->
@@ -464,7 +464,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
   <div id="acards"></div>
 
   <h3 class="sech">Limitations</h3>
-  <div class="card"><ul class="limlist"><li><b>Data coverage.</b> Project details come from the LGSF database extract (as of 4 Nov 2026) and the LIME-20 export of 20% Development Fund projects, public fields only. SubayBAYAN project exports and LIME-20 / RPMES forms (FY 2022–2026) add geotagged-photo counts and monthly accomplishment reports; monthly RPMES reports are available mainly for projects enrolled from FY 2025. TPM findings cover the regions that have submitted terminal reports.</li><li><b>Approximate locations.</b> Pins use barangay or town centres. Exact sites come only from geotagged photos.</li><li><b>Evidence, not verdicts.</b> A mismatch is a reason to check, never proof of fraud. TPM ratings are perception surveys, not engineering verification. Matches to TPM reports are likely, not certain.</li><li><b>Official status untouched.</b> AI Review Priority is separate from the official Projects-at-Risk list and never changes it.</li><li><b>Privacy.</b> No names of citizens or respondents. Tickets and photos stay on this device in the prototype; nothing is sent anywhere.</li><li><b>Public version.</b> RPMES risk ratings and exception reports are excluded. TPM 2026 findings come from terminal reports submitted by Regional Offices; the report files on Google Drive may require access. project details are limited to fields SubayBAYAN already publishes.</li><li><b>Prototype scope.</b> Agents run fixed rules in the browser (demo mode). Six training cases are synthetic, for testing the red-team step. A live version needs a data-sharing agreement with DILG.</li></ul></div>
+  <div class="card"><ul class="limlist"><li><b>Data coverage.</b> Project details come from the LGSF database extract (as of 4 Nov 2026) and the LIME-20 export of 20% Development Fund projects, public fields only. SubayBAYAN project exports and LIME-20 / RPMES forms (FY 2022–2026) add geotagged-photo counts and monthly accomplishment reports; monthly RPMES reports are available mainly for projects enrolled from FY 2025. TPM findings cover the regions that have submitted terminal reports.</li><li><b>Approximate locations.</b> Pins use barangay or town centres. Exact sites come only from geotagged photos.</li><li><b>Evidence, not verdicts.</b> A mismatch is a reason to check, never proof of fraud. TPM ratings are perception surveys, not engineering verification. Matches to TPM reports are likely, not certain.</li><li><b>Official status untouched.</b> AI Review Priority is separate from the official Projects-at-Risk list and never changes it.</li><li><b>Privacy.</b> No names of citizens or respondents. Tickets and photos stay on this device in the prototype; nothing is sent anywhere.</li><li><b>Prototype scope.</b> Agents run fixed rules in the browser (demo mode). Six training cases are synthetic, for testing the red-team step. A live version needs a data-sharing agreement with DILG.</li></ul></div>
 </section>
 
 </div></main>
@@ -504,7 +504,6 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
 
 <footer><div class="wrap"><span>UGNAY-SUBAY · Prototype · Project records from the LGSF database extract and LIME-20 (public fields); review findings on training cases are synthetic · Demo mode runs fixed rules in your browser · Not affiliated with or endorsed by DILG.</span></div></footer>
 
-<script>window.PUBLIC_BUILD=true;</script>
 <script src="data/projects.js"></script>
 <script src="data/tpm.js"></script>
 <script src="data/ext.js"></script>
@@ -699,7 +698,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
       A({t:"note",text:"Ratings on a 1–4 scale from beneficiary and stakeholder surveys; not engineering verification."});
       var low=Object.keys(TP.lgu).map(function(k){return TP.lgu[k];}).filter(function(l){return l.res<3&&(!region||region==="Region 12");}).sort(function(a,b){return a.res-b.res;});
       if(low.length)A({t:"p",text:"<b>LGUs with a TPM Result rating below 3:</b> "+low.map(function(l){return l.name+" ("+l.res.toFixed(2)+")";}).join(", ")+". Their follow-up items should be checked with the Regional Office."});}
-    else A({t:"p",text:window.PUBLIC_BUILD?"Detailed TPM findings are included in the internal DILG version only.":"No TPM 2026 terminal report has been received for "+region+" yet."});
+    else A({t:"p",text:"No TPM 2026 terminal report has been received for "+region+" yet."});
     A({t:"pb"});hd("Projects for immediate review");A({t:"p",text:"The "+topP.length+" projects with the highest AI Review Priority. Priority is a signal for review only; it does not change official Projects-at-Risk status."});
     A({t:"tbl",w:[17,15,15,10,12,20],head:["Project code","LGU","Fund · type","Cost (₱)","Status","Why it is flagged"],num:[0,0,0,1,0,0],small:true,rows:topP.map(function(p){return [p.id,p.lgu+", "+p.prov,progL(p)+" · "+p.type,fmt(p.cost||0),p.status+" ("+(p.phys||0)+"%)",whyShort(p)];})});
     hd("Citizen feedback and actions taken");
@@ -852,7 +851,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
 
   function gHtml(p){if(!p.g)return '';var w=p.noComp;
     return '<p class="small"><b style="color:var(--ink)">Geotagged photos in SubayBAYAN:</b> '+GST.map(function(n,i){return n+' <b style="color:'+(p.g[i]?'var(--ink)':'var(--muted)')+'">'+p.g[i]+'</b>';}).join(' · ')+(w?'<br><b style="color:var(--gold)">⚠ Marked completed, but no geotagged photo at completion or in operation.</b>':'')+'</p>';}
-  function rpHtml(p){if(window.PUBLIC_BUILD)return '<p class="small">RPMES / LIME-20 monitoring reports are shown in the internal DILG version only.</p>';var x=p.rx;if(!x)return '<p class="small">'+(p.yr>=2025?'No RPMES (LIME-20) report matched for this project.':'No RPMES (LIME-20) monthly report on file for this project.')+'</p>';
+  function rpHtml(p){var x=p.rx;if(!x)return '<p class="small">'+(p.yr>=2025?'No RPMES (LIME-20) report matched for this project.':'No RPMES (LIME-20) monthly report on file for this project.')+'</p>';
     var rc=x.risk==="High Risk"?"var(--red)":/Moderate|Low/.test(x.risk||"")?"var(--gold)":"var(--ok)";
     var h='<dl class="kv">'+(x.mo?'<dt>Latest report</dt><dd>'+esc(x.mo)+'</dd>':'')+(x.act!=null?'<dt>Accomplishment</dt><dd>'+x.act+'% actual'+(x.tgt!=null?' vs '+x.tgt+'% target':'')+'</dd>':'')+(x.slip!=null?'<dt>Slippage</dt><dd>'+x.slip+'%</dd>':'')+(x.risk?'<dt>Risk level</dt><dd><b style="color:'+rc+'">'+esc(x.risk)+'</b></dd>':'')+(x.coc?'<dt>Completion</dt><dd>Certificate dated '+x.coc+'</dd>':'')+'</dl>';
     if(x.exc)h+='<p class="small"><b style="color:var(--gold)">Exception report ('+esc(x.exc.st||'status not given')+'):</b> '+esc(x.exc.find)+(x.exc.act?' <i>Action: '+esc(x.exc.act)+'</i>':'')+'</p>';
@@ -876,7 +875,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
     else if(o.cov)h='<p class="small">'+esc(o.reg.cso)+' monitored <b style="color:var(--ink)">'+o.cov+'</b> completed project'+(o.cov>1?'s':'')+' in this LGU (TPM 2026). The project-level list is not in the readable report, so this project can\'t be confirmed yet.</p>';
     else if(o.reg)h='<p class="small">'+esc(p.reg)+' submitted its TPM 2026 report ('+esc(o.reg.cso)+'); this LGU was not in the sample.</p>';
     else h='<p class="small">TPM 2026 for '+esc(p.reg)+': '+TPST[o.st]+'.</p>';
-    if(TP.url&&TP.url[p.reg])h+='<p class="small"><a class="tplink" href="'+TP.url[p.reg]+'" target="_blank" rel="noopener">📄 Open the '+esc(p.reg)+' TPM 2026 '+(o.st==="part"?"submission folder":"terminal report")+' ↗</a> <span>(Google Drive; access may be required)</span></p>';
+    if(TP.url&&TP.url[p.reg])h+='<p class="small"><a class="tplink" href="'+TP.url[p.reg]+'">📄 Open the '+esc(p.reg)+' TPM 2026 '+(o.st==="part"?"submission folder":"terminal report")+' ↗</a> <span>(Google Drive; DILG access needed)</span></p>';
     if(o.reg)h+='<p class="small">Region: '+esc(o.reg.scope)+(o.reg.proc?' · Process '+o.reg.proc.toFixed(2)+', Result '+o.reg.res.toFixed(2):'')+'.</p>';
     return h;}
   /* ---------- geotagged photos ---------- */
@@ -904,7 +903,7 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
     return c;}
   function photoBox(p,mode){var a=PH[p.id]||[],show=mode==="card"?a.slice(-3):a;
     return '<div class="phbox" data-phb="'+esc(p.id)+'" data-mode="'+mode+'">'+(mode==="full"?'<b style="font-size:.85rem">Project photos</b>':'')+
-      (a.length?'<div class="phgrid">'+show.map(function(h){return '<figure class="phi"><img src="'+h.src+'" alt="Photo of the project site"><figcaption><span><b style="color:var(--ink)">'+esc(h.by)+'</b>'+(h.lat!=null?' · <a href="https://www.openstreetmap.org/?mlat='+h.lat.toFixed(6)+'&mlon='+h.lng.toFixed(6)+'#map=17/'+h.lat.toFixed(6)+'/'+h.lng.toFixed(6)+'" target="_blank" rel="noopener">View pin ↗</a>':'')+'</span>'+phChk(p,h).map(function(c){return '<span class="ck '+(c.ok?'ok':'w')+'">'+(c.ok?'✓ ':'⚠ ')+esc(c.t)+'</span>';}).join("")+'</figcaption></figure>';}).join("")+'</div>'+(mode==="card"&&a.length>3?'<span class="small">+'+(a.length-3)+' more</span>':''):'<span class="small">No photo yet.</span>')+
+      (a.length?'<div class="phgrid">'+show.map(function(h){return '<figure class="phi"><img src="'+h.src+'" alt="Photo of the project site"><figcaption><span><b style="color:var(--ink)">'+esc(h.by)+'</b>'+(h.lat!=null?' · <a href="https://www.openstreetmap.org/?mlat='+h.lat.toFixed(6)+'&mlon='+h.lng.toFixed(6)+'#map=17/'+h.lat.toFixed(6)+'/'+h.lng.toFixed(6)+'">View pin ↗</a>':'')+'</span>'+phChk(p,h).map(function(c){return '<span class="ck '+(c.ok?'ok':'w')+'">'+(c.ok?'✓ ':'⚠ ')+esc(c.t)+'</span>';}).join("")+'</figcaption></figure>';}).join("")+'</div>'+(mode==="card"&&a.length>3?'<span class="small">+'+(a.length-3)+' more</span>':''):'<span class="small">No photo yet.</span>')+
       '<div class="btnrow"><label class="btn ghost phadd">📷 Add a geotagged photo<input type="file" accept="image/jpeg,image/*" class="ph-in" data-ph="'+esc(p.id)+'"></label><span class="small" data-phmsg="'+esc(p.id)+'">The photo\'s own GPS and date set the pin. Saved on this device only (demo).</span></div></div>';}
   function addPhoto(id,file){var p=byId(id);if(!p||!file)return;
     file.arrayBuffer().then(function(buf){var x=exif(buf),fr=new FileReader();
@@ -1160,14 +1159,14 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
     $("asof").textContent="Physical status as recorded in SubayBAYAN / LIME-20.";
     var ok=REGS.filter(function(r){return TP.status[r]==="ok"||TP.status[r]==="big";}).length;
     var SG=[["nc","Completed, no geotagged completion photo",c("nc"),"var(--gold)","of "+peso(cnt.Completed)+" completed"],["rh","RPMES High Risk (latest report)",c("rh"),"var(--red)","latest monthly report"],["sl","RPMES slippage of 10% or more",c("sl"),"var(--red)","behind target"],["ex","RPMES exception reports",c("ex"),"var(--gold)","issues reported by LGUs"],["inc","Conflicting evidence",c("inc"),"var(--red)","sources disagree"],[null,"TPM 2026 terminal reports",ok+" of "+REGS.length,"var(--tpm)","regions submitted"]];
-    if(window.PUBLIC_BUILD)SG=SG.filter(function(g){return ["rh","sl","ex"].indexOf(g[0])<0;});$("sigs").innerHTML=SG.map(function(g){return '<button type="button" class="sig"'+(g[0]?' data-k="'+g[0]+'"':' data-k="tpm"')+' style="--c:'+g[3]+'"><b>'+(typeof g[2]==="number"?peso(g[2]):g[2])+'</b><span>'+g[1]+'<small>'+g[4]+'</small></span></button>';}).join("");
+    $("sigs").innerHTML=SG.map(function(g){return '<button type="button" class="sig"'+(g[0]?' data-k="'+g[0]+'"':' data-k="tpm"')+' style="--c:'+g[3]+'"><b>'+(typeof g[2]==="number"?peso(g[2]):g[2])+'</b><span>'+g[1]+'<small>'+g[4]+'</small></span></button>';}).join("");
     var G={};REGS.forEach(function(r){G[r]={n:0,c:0,h:0,late:0,nc:0,rh:0};});
     R.forEach(function(p){var g=G[p.reg];if(!g)return;g.n++;if(p.status==="Completed")g.c++;if(MET.h[1](p))g.h++;if(MET.late[1](p))g.late++;if(p.noComp)g.nc++;if(MET.rh[1](p))g.rh++;});
     var EB=escByReg(),EMX=Math.max.apply(null,REGS.map(function(r){return EB[r]||0;}).concat([0]));
     var TPL={ok:["Received","var(--ok)"],big:["Received","var(--ok)"],part:["Partial","var(--gold)"],none:["Not yet","var(--muted)"]};
     function cell(v,k,rg,col){return '<td class="num">'+(v?'<button type="button" class="nlink" data-k="'+k+'" data-r="'+esc(rg)+'"'+(col?' style="color:'+col+'"':'')+'>'+peso(v)+'</button>':'<span class="small">0</span>')+'</td>';}
     $("rov").innerHTML=REGS.filter(function(r){return G[r].n;}).map(function(r){var g=G[r],rate=g.n?Math.round(100*g.c/g.n):0,t=TPL[TP.status[r]||"none"];
-      return '<tr><td><button type="button" class="rlink" data-open="'+esc(r)+'">'+esc(r)+'</button></td>'+cell(g.n,"all",r)+'<td><div class="mbar"><i style="width:'+rate+'%"></i></div><span class="small">'+rate+'%</span></td>'+cell(g.h,"h",r,"var(--red)")+cell(g.late,"late",r)+cell(g.nc,"nc",r,"var(--gold)")+cell(EB[r]||0,"esc",r,(EB[r]||0)===EMX&&EMX>0?"#C9B3FF":"")+'<td>'+(TP.url&&TP.url[r]?'<a class="tchip" style="--c:'+t[1]+'" href="'+TP.url[r]+'" target="_blank" rel="noopener" title="Open the TPM 2026 '+(TP.status[r]==="part"?"submission folder":"terminal report")+' on Google Drive">'+t[0]+' ↗</a>':'<span class="tchip" style="--c:'+t[1]+'">'+t[0]+'</span>')+'</td></tr>';}).join("");
+      return '<tr><td><button type="button" class="rlink" data-open="'+esc(r)+'">'+esc(r)+'</button></td>'+cell(g.n,"all",r)+'<td><div class="mbar"><i style="width:'+rate+'%"></i></div><span class="small">'+rate+'%</span></td>'+cell(g.h,"h",r,"var(--red)")+cell(g.late,"late",r)+cell(g.nc,"nc",r,"var(--gold)")+cell(g.rh,"rh",r,"var(--red)")+cell(EB[r]||0,"esc",r,(EB[r]||0)===EMX&&EMX>0?"#C9B3FF":"")+'<td>'+(TP.url&&TP.url[r]?'<a class="tchip" style="--c:'+t[1]+'" href="'+TP.url[r]+'" title="Open the TPM 2026 '+(TP.status[r]==="part"?"submission folder":"terminal report")+' on Google Drive">'+t[0]+' ↗</a>':'<span class="tchip" style="--c:'+t[1]+'">'+t[0]+'</span>')+'</td></tr>';}).join("");
     $("rov-src").textContent=srcLine();
   }
   $("co-kpis").addEventListener("click",function(e){var b=e.target.closest("[data-k]");if(!b)return;var k=b.dataset.k;if(k==="rov")$("co-rov").scrollIntoView({behavior:"smooth"});else drill(k);});
@@ -1190,5 +1189,6 @@ a.tchip{text-decoration:none}a.tchip:hover{background:var(--c);color:#0B2A6B}.tp
   drawNav();showStreams();route();
 })();
 </script>
+<script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest('a[href^="http"]');if(a){a.target="_blank";a.rel="noopener";}},true);</script>
 </body>
 </html>
